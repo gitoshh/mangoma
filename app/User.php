@@ -29,4 +29,33 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public static $rules = [
+            'email' => 'required|unique:users,email',
+            'password' => 'required|min:6',
+            'name' => 'required|string'
+        ];
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.required'     => 'Email is required',
+            'email.email'        => 'Email is of invalid format',
+            'email.unique'       => 'Email already exists',
+            'name.required'      => 'Name is required',
+            'password.min'       => 'Password is too short',
+            'password.required'  => 'Password is required',
+        ];
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User as UserModel;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use App\Domains\User as UserDomain;
 
 class UsersController extends Controller
@@ -16,7 +16,7 @@ class UsersController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param UserDomain $userDomain
      */
     public function __construct(Request $request, UserDomain $userDomain)
@@ -30,19 +30,7 @@ class UsersController extends Controller
      */
     public function new()
     {
-        try {
-            $this->validate($this->request, [
-                'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                    'message' => 'error',
-                    'data'    => $e->getMessage(),
-                    ], 422
-            );
-        }
+        $this->validate($this->request, UserModel::$rules);
 
         $response = $this->userDomain->newUser(
             $this->get('name'),
