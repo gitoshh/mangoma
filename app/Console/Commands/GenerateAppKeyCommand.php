@@ -25,9 +25,9 @@ class GenerateAppKeyCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
-     *
      * @throws TypeError
+     *
+     * @return mixed
      */
     public function handle()
     {
@@ -52,7 +52,6 @@ class GenerateAppKeyCommand extends Command
         return base_path('.env');
     }
 
-
     /**
      * Adds a random 32 character string to env file.
      *
@@ -64,15 +63,14 @@ class GenerateAppKeyCommand extends Command
     private function updateEnvFile($path, $key)
     {
         if (file_exists($path)) {
-
             $existingEnvValues = file_get_contents($path);
-            $search = 'APP_KEY=' . env('APP_KEY');
+            $search = 'APP_KEY='.env('APP_KEY');
 
             if (!Str::contains($existingEnvValues, $search)) {
                 $search = 'APP_KEY=';
             }
 
-            $newContent = str_replace($search, 'APP_KEY=' . $key, $existingEnvValues);
+            $newContent = str_replace($search, 'APP_KEY='.$key, $existingEnvValues);
 
             return file_put_contents($path, $newContent);
         }

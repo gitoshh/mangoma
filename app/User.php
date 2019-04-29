@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
-use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Lumen\Auth\Authorizable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -30,16 +30,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
-
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public static $rules = [
-            'email' => 'required|unique:users,email',
+            'email'    => 'required|unique:users,email',
             'password' => 'required|min:6',
-            'name' => 'required|string'
+            'name'     => 'required|string',
         ];
 
     /**
