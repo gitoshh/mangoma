@@ -7,11 +7,11 @@ use Pearl\RequestValidate\RequestAbstract;
 class UserRequest extends RequestAbstract
 {
     /**
-    * Sanitize request data before validation.
-    */
+     * Sanitize request data before validation.
+     */
     protected function prepareForValidation()
     {
-        $this->merge(['email' => strtoLower($this->input('email'))]);
+        $this->merge(['email' => strtolower($this->input('email'))]);
     }
 
     /**
@@ -22,9 +22,9 @@ class UserRequest extends RequestAbstract
     public function rules()
     {
         return [
-            'email' => 'required|unique:users,email',
+            'email'    => 'required|unique:users,email',
             'password' => 'required|min:6',
-            'name' => 'required|string'
+            'name'     => 'required|string',
         ];
     }
 
@@ -43,5 +43,4 @@ class UserRequest extends RequestAbstract
             'password.required'  => 'Password is required',
         ];
     }
-
 }
