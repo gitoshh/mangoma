@@ -22,7 +22,7 @@ class UsersControllerTest extends BaseTest
         $this->assertResponseOk();
     }
 
-    public function  testUserValidationError(): void
+    public function testUserValidationError(): void
     {
         unset($this->payload['email']);
         $this->payload['email'] = 'test.user@gmail.com';

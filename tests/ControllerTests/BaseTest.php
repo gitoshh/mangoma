@@ -16,7 +16,7 @@ class BaseTest extends TestCase
         Artisan::call('migrate:refresh');
         Artisan::call('db:seed');
         $this->headers = [
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ];
     }
 
