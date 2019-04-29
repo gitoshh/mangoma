@@ -30,7 +30,7 @@ class UsersController extends Controller
      */
     public function new()
     {
-        $this->validate($this->request, UserModel::$rules);
+        $this->validate($this->request, UserModel::$userRules);
 
         $response = $this->userDomain->newUser(
             $this->get('name'),

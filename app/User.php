@@ -27,17 +27,23 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'refresh_token',
     ];
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
+     * @var array
      */
-    public static $rules = [
+    public static $userRules = [
             'email'    => 'required|unique:users,email',
             'password' => 'required|min:6',
             'name'     => 'required|string',
         ];
+
+    /**
+     * @var array
+     */
+    public static $loginRules = [
+        'email'    => 'required|email',
+        'password' => 'required|min:6',
+    ];
 }
