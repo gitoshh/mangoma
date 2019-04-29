@@ -41,21 +41,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'password' => 'required|min:6',
             'name' => 'required|string'
         ];
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'email.required'     => 'Email is required',
-            'email.email'        => 'Email is of invalid format',
-            'email.unique'       => 'Email already exists',
-            'name.required'      => 'Name is required',
-            'password.min'       => 'Password is too short',
-            'password.required'  => 'Password is required',
-        ];
-    }
 }
