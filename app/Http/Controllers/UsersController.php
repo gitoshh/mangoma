@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\User as UserDomain;
 use App\User as UserModel;
 use Illuminate\Http\Request;
-use App\Domains\User as UserDomain;
 
 class UsersController extends Controller
 {
@@ -16,7 +16,7 @@ class UsersController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param UserDomain $userDomain
      */
     public function __construct(Request $request, UserDomain $userDomain)
@@ -38,7 +38,7 @@ class UsersController extends Controller
             $this->get('password')
         );
 
-        if(!empty($response)) {
+        if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
                 'data'    => $response,
@@ -46,7 +46,7 @@ class UsersController extends Controller
         }
 
         return response()->json([
-            'message' => 'error'
+            'message' => 'error',
         ], 500);
     }
 }
