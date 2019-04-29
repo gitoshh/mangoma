@@ -30,16 +30,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
-
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public static $rules = [
-            'email' => 'required|unique:users,email',
+            'email'    => 'required|unique:users,email',
             'password' => 'required|min:6',
-            'name' => 'required|string'
+            'name'     => 'required|string',
         ];
 
     /**
