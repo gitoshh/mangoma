@@ -1,6 +1,8 @@
 <?php
 
 
+use Illuminate\Support\Facades\Artisan;
+
 class BaseTest extends TestCase
 {
     /**
@@ -11,6 +13,8 @@ class BaseTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Artisan::call('migrate:refresh');
+        Artisan::call('db:seed');
         $this->headers = [
             'Content-Type' => 'application/json'
         ];
@@ -30,4 +34,9 @@ class BaseTest extends TestCase
         );
     }
 
+    public function tearDown(): void
+    {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }
 }
