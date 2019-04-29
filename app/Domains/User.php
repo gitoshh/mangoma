@@ -1,15 +1,14 @@
 <?php
 
-
 namespace App\Domains;
+
 use App\User as UserModel;
 use Illuminate\Support\Facades\Hash;
-
 
 class User
 {
     /**
-     * Creates a new user instance in the database;
+     * Creates a new user instance in the database;.
      *
      * @param string $name
      * @param string $email
@@ -30,5 +29,4 @@ class User
 
         return [];
     }
-
 }
