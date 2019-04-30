@@ -1,18 +1,26 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
-|
-*/
-
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
 $router->post('/users', 'UsersController@new');
+$router->post('/auth/login', 'AuthController@authenticate');
+
+$router->group([
+    'middleware' => 'auth',
+    'prefix'     => 'auth',
+], function () use ($router) {
+    $router->post('logout', 'AuthController@logout');
+    $router->post('refresh', 'AuthController@refresh');
+});
+
+$router->group([
+    'middleware' => ['auth', 'role:Admin'],
+    'prefix'     => 'admin',
+], function () use ($router) {
+    $router->post('permission', 'EntrustController@newPermission');
+    $router->post('role', 'EntrustController@newRole');
+    $router->post('attach/role', 'EntrustController@addRole');
+    $router->post('attach/permission', 'EntrustController@addPermissions');
+});

@@ -6,11 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=7.1.3",
-        "laravel/lumen-framework": "5.8.*",
-        "vlucas/phpdotenv": "^3.3",
-        "pearl/lumen-request-validate": "^1.0",
+        "ext-json": "*",
+        "firebase/php-jwt": "^5.0",
         "illuminate/mail": "^5.7",
-        "ext-json": "*"
+        "laravel/lumen-framework": "5.8.*",
+        "laravelista/lumen-vendor-publish": "^2.1",
+        "pearl/lumen-request-validate": "^1.0",
+        "proshore/entrust-lumen": "1.0.2",
+        "vlucas/phpdotenv": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
