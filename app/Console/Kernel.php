@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\GenerateAppKeyCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+use Laravelista\LumenVendorPublish\VendorPublishCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         GenerateAppKeyCommand::class,
+        VendorPublishCommand::class,
     ];
 
     /**

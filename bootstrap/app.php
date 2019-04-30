@@ -46,6 +46,9 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->configure('auth');
+$app->configure('permission');
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -62,7 +65,10 @@ $app->singleton(
 // ]);
 
  $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
+     'auth'       => App\Http\Middleware\Authenticate::class,
+     'role'       => Zizaco\Entrust\Middleware\EntrustRole::class,
+     'permission' => Zizaco\Entrust\Middleware\EntrustPermission::class,
+     'ability'    => Zizaco\Entrust\Middleware\EntrustAbility::class,
  ]);
 
 /*
@@ -78,7 +84,13 @@ $app->singleton(
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+ // $app->register(App\Providers\EventServiceProvider::class);
+ $app->register(Zizaco\Entrust\EntrustServiceProvider::class);
+
+$app->withFacades(true,
+    [
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
+    ]);
 
 /*
 |--------------------------------------------------------------------------
