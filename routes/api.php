@@ -12,7 +12,6 @@ $router->group([
     'prefix'     => 'auth',
 ], function () use ($router) {
     $router->post('logout', 'AuthController@logout');
-    $router->post('refresh', 'AuthController@refresh');
 });
 
 $router->group([
