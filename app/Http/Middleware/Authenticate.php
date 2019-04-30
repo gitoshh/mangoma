@@ -4,9 +4,10 @@ namespace App\Http\Middleware;
 
 use App\User as UserModel;
 use Closure;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
@@ -40,19 +41,29 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $token = $request->header('token');
-        if ($token === null) {
+        if ($this->auth->guard($guard)->guest()) {
+            $token = $request->header('token');
+
+            if ($token === null) {
+                return response('Unauthorized.', 401);
+            }
+
+            try {
+                $decoded = JWT::decode($token, getenv('JWT_TOKEN'), ['HS256']);
+            } catch (ExpiredException $e) {
+                return response('Expired Token.', 401);
+            }
+
+            $user = UserModel::find($decoded->sub);
+            $storedToken = $user->first('token')->toArray()['token'];
+
+            if (!empty($user->first()) && $storedToken === $token) {
+                \Illuminate\Support\Facades\Auth::setUser($user);
+
+                return $next($request);
+            }
+
             return response('Unauthorized.', 401);
         }
-        $decoded = JWT::decode($token, getenv('JWT_TOKEN'), ['HS256']);
-        $user = UserModel::find($decoded->sub);
-
-        if (!empty($decoded->first())) {
-            Auth::setUser($user);
-
-            return $next($request);
-        }
-
-        return response('Unauthorized.', 401);
     }
 }

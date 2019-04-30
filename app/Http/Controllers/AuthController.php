@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Firebase\JWT\JWT;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -14,6 +17,13 @@ class AuthController extends Controller
         parent::__construct($request);
     }
 
+    /**
+     * Authenticates user.
+     *
+     * @throws ValidationException
+     *
+     * @return JsonResponse
+     */
     public function authenticate()
     {
         $this->validate($this->request, User::$loginRules);
@@ -30,8 +40,12 @@ class AuthController extends Controller
 
         // Verify the password and generate the token
         if (Hash::check($this->get('password'), $user->password)) {
+            $token = $this->jwt($user);
+            $user->token = $token;
+            $user->update();
+
             return response()->json([
-                'token' => $this->jwt($user),
+                'token' => $token,
             ], 200);
         }
 
@@ -54,9 +68,25 @@ class AuthController extends Controller
             'iss' => 'gitoshh/mangoma',
             'sub' => $user->id,
             'iat' => time(),
-            'exp' => time() + 60,
+            'exp' => time() + 60 * 60,
         ];
 
         return JWT::encode($token, getenv('JWT_TOKEN'));
+    }
+
+    /**
+     * Removes user token from the table.
+     */
+    public function logout()
+    {
+        $user = User::find(Auth::user()->getAuthIdentifier());
+        $user->token = null;
+        if ($user->update()) {
+            // Bad Request response
+            return response()->json([
+                'message' => 'success',
+                'data'    => 'Logged out successfully',
+            ], 200);
+        }
     }
 }
