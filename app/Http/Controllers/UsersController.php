@@ -42,7 +42,7 @@ class UsersController extends Controller
             return response()->json([
                 'message' => 'success',
                 'data'    => $response,
-            ], 200);
+            ]);
         }
 
         return response()->json([

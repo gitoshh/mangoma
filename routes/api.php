@@ -23,3 +23,12 @@ $router->group([
     $router->post('attach/role', 'EntrustController@addRole');
     $router->post('attach/permission', 'EntrustController@addPermissions');
 });
+
+$router->group([
+    'middleware' => ['auth', 'role:Artiste|Admin'],
+    'prefix'     => 'music',
+], function () use ($router) {
+    $router->post('/', 'MusicController@addNewSong');
+    $router->put('/{id}', 'MusicController@updateSong');
+    $router->delete('/{id}', 'MusicController@deleteSong');
+});

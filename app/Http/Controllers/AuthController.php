@@ -24,14 +24,14 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function authenticate()
+    public function authenticate():JsonResponse
     {
         $this->validate($this->request, User::$loginRules);
 
         // Find the user by email
         $user = User::where('email', $this->get('email'))->first();
 
-        if (is_null($user)) {
+        if (empty($user)) {
             return response()->json([
                 'message' => 'error',
                 'data'    => 'Email does not exist',
@@ -46,7 +46,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-            ], 200);
+            ]);
         }
 
         // Bad Request response
@@ -62,7 +62,7 @@ class AuthController extends Controller
      *
      * @return string
      */
-    public function jwt(User $user)
+    public function jwt(User $user): string
     {
         $token = [
             'iss' => 'gitoshh/mangoma',
@@ -84,9 +84,14 @@ class AuthController extends Controller
         if ($user->update()) {
             // Bad Request response
             return response()->json([
-                'message' => 'success',
-                'data'    => 'Logged out successfully',
-            ], 200);
+                'message' => 'Success',
+                'data'    => 'Logged out successfully.',
+            ]);
         }
+
+        return response()->json([
+            'message' => 'Error',
+            'data'    => 'An error occurred while trying to logout.',
+        ]);
     }
 }

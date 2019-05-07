@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Artisan;
 
 class BaseTest extends TestCase
@@ -15,9 +14,7 @@ class BaseTest extends TestCase
         parent::setUp();
         Artisan::call('migrate:refresh');
         Artisan::call('db:seed');
-        $this->headers = [
-            'Content-Type' => 'application/json',
-        ];
+        $this->headers = [];
     }
 
     /**
@@ -30,7 +27,8 @@ class BaseTest extends TestCase
         $this->get('/');
 
         $this->assertEquals(
-            $this->app->version(), $this->response->getContent()
+            $this->app->version(),
+            $this->response->getContent()
         );
     }
 

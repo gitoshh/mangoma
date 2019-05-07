@@ -6,6 +6,7 @@ use App\User as UserModel;
 use Closure;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
+use Firebase\JWT\SignatureInvalidException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
 
@@ -52,6 +53,8 @@ class Authenticate
                 $decoded = JWT::decode($token, getenv('JWT_TOKEN'), ['HS256']);
             } catch (ExpiredException $e) {
                 return response('Expired Token.', 401);
+            } catch (SignatureInvalidException $e) {
+                return response('Invalid Token.', 401);
             }
 
             $user = UserModel::find($decoded->sub);
