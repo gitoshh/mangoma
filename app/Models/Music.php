@@ -17,13 +17,13 @@ class Music extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'originalName', 'extension', 'location', 'uniqueName'
+        'title', 'originalName', 'extension', 'location', 'uniqueName',
     ];
 
     /**
      * @var array
      */
     public static $rules = [
-        'title'         => 'required|string',
+        'title' => 'required|string',
         ];
 }

@@ -11,7 +11,7 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__ . '/../bootstrap/app.php';
+        $app = require __DIR__.'/../bootstrap/app.php';
         $app->alias(\Illuminate\Http\Request::class, 'request');
 
         return $app;

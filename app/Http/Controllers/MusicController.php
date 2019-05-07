@@ -31,8 +31,9 @@ class MusicController extends Controller
     /**
      * Creates new music and stores it in audio file.
      *
-     * @return JsonResponse
      * @throws ValidationException
+     *
+     * @return JsonResponse
      */
     public function addNewSong(): JsonResponse
     {
@@ -40,11 +41,10 @@ class MusicController extends Controller
 
         $title = $this->request->get('title');
         $musicFile = $this->request->file('song');
-        dd($musicFile);
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
 
-        $location = public_path('audio/' . $originalName);
+        $location = public_path('audio/'.$originalName);
         $uniqueName = uniqid('audio_', true);
         $location = edit_uploaded_file_location($location, $uniqueName).'.'.$extension;
         $musicFile->move($location, $originalName);
@@ -79,14 +79,14 @@ class MusicController extends Controller
         if (!empty($this->request->input('title'))) {
             $payload = [
                     'title' => $this->request->input('title'),
-        ];
+                ];
         }
 
         if (!empty($this->request->file('song'))) {
             $musicFile = $this->request->file('song');
             $originalName = $musicFile->getClientOriginalName();
             $extension = $musicFile->getClientOriginalExtension();
-            $location = public_path('audio/' . $originalName);
+            $location = public_path('audio/'.$originalName);
 
             $payload['location'] = $location;
             $payload['extension'] = $extension;
@@ -108,9 +108,12 @@ class MusicController extends Controller
 
     /**
      * Deletes a song given the song id.
+     *
      * @param $id
-     * @return JsonResponse
+     *
      * @throws Exception
+     *
+     * @return JsonResponse
      */
     public function deleteSong(int $id): JsonResponse
     {

@@ -1,6 +1,6 @@
 <?php
 
-if ( !function_exists('public_path')) {
+if (!function_exists('public_path')) {
 
     /**
      * Helper function to create a public path.
@@ -11,11 +11,11 @@ if ( !function_exists('public_path')) {
      */
     function public_path($path): string
     {
-        return rtrim(app()->basePath('public/' . $path), '/');
+        return rtrim(app()->basePath('public/'.$path), '/');
     }
 }
 
-if ( !function_exists('edit_uploaded_file_location')) {
+if (!function_exists('edit_uploaded_file_location')) {
 
     /**
      * Replaces filename with unique name on the file path.
@@ -30,6 +30,7 @@ if ( !function_exists('edit_uploaded_file_location')) {
         $newPath = explode('/', $path);
         array_pop($newPath);
         $newPath[] = $uniqueName;
+
         return implode('/', $newPath);
     }
 }

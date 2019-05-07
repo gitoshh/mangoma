@@ -83,15 +83,15 @@ class EntrustController extends Controller
     public function addPermissions(): JsonResponse
     {
         $payload = $this->request->only('roleId', 'permissions');
-        dd($payload);
         $role = Role::where('id', $payload['roleId'])->first();
         foreach ($payload['permissions'] as $permission) {
             $role->attachPermissions($payload['permissions']);
         }
-            return response()->json([
-                'message' => 'success',
-                'data'    => 'Permissions added successfully',
-            ]);
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => 'Permissions added successfully',
+        ]);
     }
 
     /**
@@ -104,6 +104,7 @@ class EntrustController extends Controller
         $payload = $this->request->only('userId', 'roleId');
         $user = User::where('id', $payload['userId'])->first();
         $user->attachRole($payload['roleId']);
+
         return response()->json([
             'message' => 'success',
             'data'    => 'Roles added successfully',

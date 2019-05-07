@@ -29,7 +29,8 @@ before_install:
 install:
   - travis_retry composer install --no-interaction --prefer-source
   - cp .env.travis .env
+  - composer dump-autoload
   - php artisan migrate
-
+  - php artisan db:seed
 
 script: vendor/bin/phpunit

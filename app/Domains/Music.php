@@ -7,7 +7,6 @@ use Exception;
 
 class Music
 {
-
     /**
      * Creates new music instance in the database.
      *
@@ -15,8 +14,8 @@ class Music
      * @param string $location
      * @param string $originalName
      * @param string $extension
-     *
      * @param string $uniqueName
+     *
      * @return array
      */
     public function newMusic(
@@ -37,6 +36,7 @@ class Music
         if (!empty($newMusic)) {
             return $newMusic->toArray();
         }
+
         return [];
     }
 
@@ -65,6 +65,7 @@ class Music
         if ($music->update()) {
             return $music->toArray();
         }
+
         return [];
     }
 
@@ -89,6 +90,7 @@ class Music
         if ($music->delete()) {
             return true;
         }
+
         return false;
     }
 }

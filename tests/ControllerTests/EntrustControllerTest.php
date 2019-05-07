@@ -3,7 +3,7 @@
 class EntrustControllerTest extends BaseTest
 {
     /**
-     * var []
+     * var [].
      */
     private $permission;
 
@@ -54,7 +54,7 @@ class EntrustControllerTest extends BaseTest
         $userCredentials = [
             'name'     => 'another user',
             'email'    => 'another.user@gmail.com',
-            'password' => '123123123'
+            'password' => '123123123',
         ];
         $userRolePayload = [
             'userId' => 2,
@@ -73,10 +73,10 @@ class EntrustControllerTest extends BaseTest
         $permission = [
             'name'         => 'another user',
             'display_name' => 'another.user@gmail.com',
-            'description'  => '123123123'
+            'description'  => '123123123',
         ];
         $rolePermissionPayload = [
-            'userId' => 2,
+            'userId'      => 2,
             'permissions' => [2],
         ];
 
