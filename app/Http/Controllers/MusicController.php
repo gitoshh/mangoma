@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use App\Http\Transformers\MusicTransformer;
 
 class MusicController extends Controller
 {
@@ -16,16 +17,19 @@ class MusicController extends Controller
      */
     private $musicDomain;
 
+    private $musicTransformer;
+
     /**
      * MusicController constructor.
      *
      * @param Request     $request
      * @param MusicDomain $musicDomain
      */
-    public function __construct(Request $request, MusicDomain $musicDomain)
+    public function __construct(Request $request, MusicDomain $musicDomain, MusicTransformer $musicTransformer)
     {
         parent::__construct($request);
         $this->musicDomain = $musicDomain;
+        $this->musicTransformer = $musicTransformer;
     }
 
     /**
@@ -41,20 +45,30 @@ class MusicController extends Controller
 
         $title = $this->request->get('title');
         $musicFile = $this->request->file('song');
+        $artistes = explode(',', $this->request->get('artistes'));
+        $albumId = $this->request->get('albumId');
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
 
-        $location = public_path('audio/'.$originalName);
+        $location = public_path('audio/');
         $uniqueName = uniqid('audio_', true);
-        $location = edit_uploaded_file_location($location, $uniqueName).'.'.$extension;
-        $musicFile->move($location, $originalName);
+        $uniqueNameExtension = $uniqueName.'.'.$extension;
+        $musicFile->move($location, $uniqueNameExtension);
+        $location = $location.'/'.$uniqueNameExtension;
 
-        $response = $this->musicDomain->newMusic($title, $location, $originalName, $extension, $uniqueName);
+        $response = $this->musicDomain->newMusic(
+            $title,
+            $location,
+            $originalName,
+            $extension,
+            $uniqueName,
+            $artistes,
+            $albumId);
 
         if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
-                'data'    => $response,
+                'data'    => $this->musicTransformer->transformSong($response),
             ]);
         }
 
@@ -82,21 +96,38 @@ class MusicController extends Controller
                 ];
         }
 
+        if (!empty($this->request->input('artistes'))) {
+            $payload = [
+                'artistes' => $this->request->input('artistes'),
+            ];
+        }
+
+        if (!empty($this->request->input('albumId'))) {
+            $payload = [
+                'albumId' => $this->request->input('albumId'),
+            ];
+        }
+
         if (!empty($this->request->file('song'))) {
             $musicFile = $this->request->file('song');
+            $location = public_path('audio/');
             $originalName = $musicFile->getClientOriginalName();
+            $uniqueName = uniqid('audio_', true);
             $extension = $musicFile->getClientOriginalExtension();
-            $location = public_path('audio/'.$originalName);
+            $uniqueNameExtension = $uniqueName.'.'.$extension;
+            $musicFile->move($location, $uniqueNameExtension);
+            $location = $location.'/'.$uniqueNameExtension;
 
             $payload['location'] = $location;
             $payload['extension'] = $extension;
             $payload['originalName'] = $originalName;
+            $payload['uniqueName'] = $uniqueName;
         }
         $response = $this->musicDomain->updateSong($id, $payload);
         if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
-                'data'    => $response,
+                'data'    => $this->musicTransformer->transformSong($response),
             ], 202);
         }
 

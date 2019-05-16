@@ -16,6 +16,8 @@ class Music
      * @param string $extension
      * @param string $uniqueName
      *
+     * @param array $artistes
+     * @param int $albumId
      * @return array
      */
     public function newMusic(
@@ -23,7 +25,9 @@ class Music
         string $location,
         string $originalName,
         string $extension,
-        string $uniqueName
+        string $uniqueName,
+        array $artistes,
+        ?int $albumId
     ): array {
         $newMusic = MusicModel::create([
             'title'        => $title,
@@ -31,7 +35,12 @@ class Music
             'originalName' => $originalName,
             'extension'    => $extension,
             'uniqueName'   => $uniqueName,
+            'artistes'     => serialize($artistes)
         ]);
+        if ($albumId) {
+            $newMusic->albumId = $albumId;
+            $newMusic->save();
+        }
 
         if (!empty($newMusic)) {
             return $newMusic->toArray();
@@ -60,7 +69,11 @@ class Music
             if ($key === 'location') {
                 unlink(public_path($music->toArray()['location']));
             }
-            $music->$key = $value;
+            if ($key === 'artistes') {
+                $music->artistes = serialize($value);
+            } else {
+                $music->$key = $value;
+            }
         }
         if ($music->update()) {
             return $music->toArray();

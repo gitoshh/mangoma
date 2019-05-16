@@ -20,6 +20,8 @@ class CreateMusicTable extends Migration
             $table->string('extension');
             $table->string('location');
             $table->string('uniqueName');
+            $table->string('artistes');
+            $table->unsignedInteger('album_id')->nullable();
             $table->timestamps();
         });
     }
