@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Model implements AuthenticatableContract
@@ -45,4 +46,14 @@ class User extends Model implements AuthenticatableContract
         'email'    => 'required|email',
         'password' => 'required|min:6',
     ];
+
+    /**
+     * The playlist that belong to the user.
+     *
+     * @return BelongsToMany
+     */
+    public function playlist(): BelongsToMany
+    {
+        return $this->belongsToMany(Playlist::class);
+    }
 }

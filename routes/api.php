@@ -32,3 +32,12 @@ $router->group([
     $router->put('/{id}', 'MusicController@updateSong');
     $router->delete('/{id}', 'MusicController@deleteSong');
 });
+
+$router->group([
+    'middleware' => ['auth', 'role:Normal|Admin|Artiste'],
+    'prefix'     => 'playlist',
+], function () use ($router) {
+    $router->post('/', 'PlaylistController@create');
+//    $router->put('/{id}', 'MusicController@updateSong');
+    $router->delete('/{id}', 'PlaylistController@deletePlaylist');
+});
