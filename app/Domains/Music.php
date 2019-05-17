@@ -2,7 +2,10 @@
 
 namespace App\Domains;
 
+use App\Exceptions\BadRequestException;
+use App\Exceptions\NotFoundException;
 use App\Music as MusicModel;
+use App\User as UserModel;
 use Exception;
 
 class Music
@@ -63,7 +66,7 @@ class Music
     {
         $music = MusicModel::find($id);
         if (empty($music)) {
-            throw new Exception('Song not found.');
+            throw new NotFoundException('Song not found.');
         }
         foreach ($updateDetails as $key => $value) {
             if ($key === 'location') {
@@ -95,7 +98,7 @@ class Music
     {
         $music = MusicModel::find($id);
         if (empty($music)) {
-            throw new Exception('Song not found.');
+            throw new NotFoundException('Song not found.');
         }
 
         unlink($music->toArray()['location']);
@@ -105,5 +108,32 @@ class Music
         }
 
         return false;
+    }
+
+    /**
+     * Adds a many to many relationship for user and music.
+     * @param int $musicId
+     * @param int $userId
+     * @param int $recommendedBy
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    public function attachMusic(int $musicId, int $userId, int $recommendedBy): void
+    {
+        if ($userId === $recommendedBy) {
+            throw new BadRequestException('You cannot recommend a song to yourself');
+        }
+
+        $user = UserModel::find($userId);
+        if(!$user) {
+            throw new NotFoundException('user not found');
+        }
+
+        $music = MusicModel::find($musicId);
+        if(!$music) {
+            throw new NotFoundException('song not found!');
+        }
+        $music->user()->attach($userId, ['recommended_by' => $recommendedBy]);
+
     }
 }

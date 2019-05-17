@@ -46,4 +46,14 @@ class Music extends Model
     {
         return $this->belongsToMany(Playlist::class);
     }
+
+    /**
+     * The users that belong to the music.
+     *
+     * @return BelongsToMany
+     */
+    public function user(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

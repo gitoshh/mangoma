@@ -34,6 +34,13 @@ $router->group([
 });
 
 $router->group([
+    'middleware' => ['auth', 'role:Artiste|Admin|Normal'],
+    'prefix'     => 'music',
+], function () use ($router) {
+    $router->post('/{id}/recommend', 'MusicController@recommendSong');
+});
+
+$router->group([
     'middleware' => ['auth', 'role:Normal|Admin|Artiste'],
     'prefix'     => 'playlist',
 ], function () use ($router) {

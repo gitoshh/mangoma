@@ -1,17 +1,12 @@
 <?php
 
+
 namespace App;
 
-use Zizaco\Entrust\EntrustRole;
 
-class Role extends EntrustRole
+use Illuminate\Database\Eloquent\Model;
+
+class Role extends Model
 {
-    /**
-     * @var array
-     */
-    public static $rules = [
-        'name'         => 'required|string|unique:roles',
-        'display_name' => 'string',
-        'description'  => 'string',
-    ];
+
 }

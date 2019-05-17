@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Music as MusicDomain;
+use App\Exceptions\NotFoundException;
 use App\Music as MusicModel;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Http\Transformers\MusicTransformer;
 
@@ -159,5 +161,21 @@ class MusicController extends Controller
             'message' => 'Error',
             'data'    => 'An error occurred while trying to delete a song.',
         ], 500);
+    }
+
+    /**
+     * Add recommended song to the user's list.
+     * @param int $id
+     * @return JsonResponse
+     * @throws NotFoundException
+     */
+    public function recommendSong(int $id): JsonResponse
+    {
+        $userId = $this->get('userId');
+        $recommendedBy = Auth::user()->getAuthIdentifier();
+        $this->musicDomain->attachMusic($id, $userId, $recommendedBy);
+        return response()->json([
+              'message' => 'success'
+          ]);
     }
 }
