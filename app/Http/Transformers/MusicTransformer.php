@@ -13,7 +13,7 @@ class MusicTransformer extends Transformer
             'originalName' => $song['originalName'],
             'extension' => $song['extension'],
             'uniqueName' => $song['uniqueName'],
-            'artistes' => unserialize($song['artistes'], ['allowed_classes' => false]),
+            'artistes' => explode(', ',$song['artistes']),
             'updated_at' => $song['updated_at'],
             'created_at' => $song['created_at'],
             'id' => $song['id']

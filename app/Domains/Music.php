@@ -19,7 +19,8 @@ class Music
      * @param string $extension
      * @param string $uniqueName
      *
-     * @param array $artistes
+     * @param string $artistes
+     * @param int $genreId
      * @param int $albumId
      * @return array
      */
@@ -30,6 +31,7 @@ class Music
         string $extension,
         string $uniqueName,
         string $artistes,
+        int    $genreId,
         ?int $albumId
     ): array {
         $newMusic = MusicModel::create([
@@ -38,7 +40,8 @@ class Music
             'originalName' => $originalName,
             'extension'    => $extension,
             'uniqueName'   => $uniqueName,
-            'artistes'     => $artistes
+            'artistes'     => $artistes,
+            'genreId'      => $genreId
         ]);
         if ($albumId) {
             $newMusic->albumId = $albumId;
@@ -159,6 +162,9 @@ class Music
                         break;
                     case 'title':
                         $songs->where('title', 'LIKE', '%'.$value.'%');
+                        break;
+                    case 'genreId':
+                        $songs->where('genreId', $value);
                         break;
                     case 'artistes':
                         $artistes = explode(',', $value);

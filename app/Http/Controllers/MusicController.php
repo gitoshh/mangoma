@@ -66,6 +66,7 @@ class MusicController extends Controller
         $musicFile = $this->request->file('song');
         $artistes = $this->request->get('artistes');
         $albumId = $this->request->get('albumId');
+        $genreId = $this->request->get('genreId');
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
 
@@ -82,7 +83,9 @@ class MusicController extends Controller
             $extension,
             $uniqueName,
             $artistes,
-            $albumId);
+            $genreId,
+            $albumId
+        );
 
         if (!empty($response)) {
             return response()->json([

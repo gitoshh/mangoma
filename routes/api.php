@@ -50,3 +50,12 @@ $router->group([
 //    $router->put('/{id}', 'MusicController@updateSong');
     $router->delete('/{id}', 'PlaylistController@deletePlaylist');
 });
+
+$router->group([
+    'middleware' => ['auth', 'role:Admin|Artiste'],
+    'prefix'     => 'genre',
+], function () use ($router) {
+    $router->post('/', 'GenreController@addNewGenre');
+//    $router->put('/{id}', 'GenreController@updateSong');
+//    $router->delete('/{id}', 'GenreController@deletePlaylist');
+});

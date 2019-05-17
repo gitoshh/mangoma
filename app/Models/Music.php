@@ -20,7 +20,14 @@ class Music extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'originalName', 'extension', 'location', 'uniqueName', 'artistes',
+        'title',
+        'originalName',
+        'extension',
+        'location',
+        'uniqueName',
+        'artistes',
+        'genreId',
+        'albumId',
     ];
 
     /**
