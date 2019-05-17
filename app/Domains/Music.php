@@ -4,6 +4,7 @@ namespace App\Domains;
 
 use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
+use App\Favourite;
 use App\Music as MusicModel;
 use App\User as UserModel;
 use Exception;
@@ -178,5 +179,22 @@ class Music
             }
         }
         return $songs->get()->toArray();
+    }
+
+    /**
+     * Favourites a song.
+     *
+     * @param int $userId
+     * @param int $songId
+     * @return array
+     */
+    public function favouriteSong(int $userId, int $songId): array
+    {
+        $favourite = new Favourite();
+        $favourite->user_id = $userId;
+        $favourite->music_id = $songId;
+        if ($favourite->save()) {
+            return $favourite->toArray();
+        }
     }
 }

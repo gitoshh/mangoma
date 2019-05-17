@@ -239,4 +239,23 @@ class MusicController extends Controller
             'data'    => $response
         ]);
     }
+
+    /**
+     * Add song to favourite category.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function addFavourite(int $id): JsonResponse
+    {
+        $response = $this->musicDomain->favouriteSong(
+            Auth::user()->getAuthIdentifier(),
+            $id
+        );
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response
+        ]);
+    }
 }
