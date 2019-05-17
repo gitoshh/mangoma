@@ -29,7 +29,7 @@ class Music
         string $originalName,
         string $extension,
         string $uniqueName,
-        array $artistes,
+        string $artistes,
         ?int $albumId
     ): array {
         $newMusic = MusicModel::create([
@@ -38,7 +38,7 @@ class Music
             'originalName' => $originalName,
             'extension'    => $extension,
             'uniqueName'   => $uniqueName,
-            'artistes'     => serialize($artistes)
+            'artistes'     => $artistes
         ]);
         if ($albumId) {
             $newMusic->albumId = $albumId;
@@ -135,5 +135,42 @@ class Music
         }
         $music->user()->attach($userId, ['recommended_by' => $recommendedBy]);
 
+    }
+
+    /**
+     * Fetch all songs with filters applied.
+     *
+     * @param array|null $filters
+     * @return array
+     */
+    public function getSongs(?array $filters = null): array
+    {
+        $songs = MusicModel::select([
+            'title',
+            'location',
+            'extension',
+            'artistes'
+        ]);
+        if ($filters) {
+            foreach ($filters as $key => $value) {
+                switch ($key) {
+                    case 'albumId':
+                        $songs->where('album_id', $value);
+                        break;
+                    case 'title':
+                        $songs->where('title', 'LIKE', '%'.$value.'%');
+                        break;
+                    case 'artistes':
+                        $artistes = explode(',', $value);
+                        foreach ($artistes as $artiste) {
+                            $songs->where('artistes', 'LIKE', '%'.$artiste.'%');
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return $songs->get()->toArray();
     }
 }

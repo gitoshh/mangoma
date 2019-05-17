@@ -38,6 +38,8 @@ $router->group([
     'prefix'     => 'music',
 ], function () use ($router) {
     $router->post('/{id}/recommend', 'MusicController@recommendSong');
+    $router->post('/{id}/comment', 'MusicController@addComment');
+    $router->get('/', 'MusicController@getSongs');
 });
 
 $router->group([

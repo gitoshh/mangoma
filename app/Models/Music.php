@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Music extends Model
 {
@@ -55,5 +56,15 @@ class Music extends Model
     public function user(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * The comments the song has.
+     *
+     * @return HasMany
+     */
+    public function comment(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

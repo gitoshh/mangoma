@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
+use App\Domains\Comment as CommentDomain;
 use App\Domains\Music as MusicDomain;
+use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
 use App\Music as MusicModel;
 use Exception;
@@ -19,26 +22,40 @@ class MusicController extends Controller
      */
     private $musicDomain;
 
+    /**
+     * @var MusicTransformer
+     */
     private $musicTransformer;
+
+    /**
+     * @var CommentDomain
+     */
+    private $commentDomain;
 
     /**
      * MusicController constructor.
      *
-     * @param Request     $request
+     * @param Request $request
      * @param MusicDomain $musicDomain
+     * @param MusicTransformer $musicTransformer
+     * @param CommentDomain $commentDomain
      */
-    public function __construct(Request $request, MusicDomain $musicDomain, MusicTransformer $musicTransformer)
-    {
+    public function __construct(
+        Request $request,
+        MusicDomain $musicDomain,
+        MusicTransformer $musicTransformer,
+        CommentDomain $commentDomain
+    ) {
         parent::__construct($request);
         $this->musicDomain = $musicDomain;
         $this->musicTransformer = $musicTransformer;
+        $this->commentDomain = $commentDomain;
     }
 
     /**
      * Creates new music and stores it in audio file.
      *
      * @throws ValidationException
-     *
      * @return JsonResponse
      */
     public function addNewSong(): JsonResponse
@@ -47,7 +64,7 @@ class MusicController extends Controller
 
         $title = $this->request->get('title');
         $musicFile = $this->request->file('song');
-        $artistes = explode(',', $this->request->get('artistes'));
+        $artistes = $this->request->get('artistes');
         $albumId = $this->request->get('albumId');
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
@@ -84,9 +101,7 @@ class MusicController extends Controller
      * Updates a song's details.
      *
      * @param $id
-     *
      * @throws Exception
-     *
      * @return JsonResponse
      */
     public function updateSong($id): JsonResponse
@@ -143,9 +158,7 @@ class MusicController extends Controller
      * Deletes a song given the song id.
      *
      * @param $id
-     *
      * @throws Exception
-     *
      * @return JsonResponse
      */
     public function deleteSong(int $id): JsonResponse
@@ -165,6 +178,7 @@ class MusicController extends Controller
 
     /**
      * Add recommended song to the user's list.
+     *
      * @param int $id
      * @return JsonResponse
      * @throws NotFoundException
@@ -177,5 +191,49 @@ class MusicController extends Controller
         return response()->json([
               'message' => 'success'
           ]);
+    }
+
+    /**
+     * Adds a new comment and|or rating.
+     *
+     * @param $id
+     * @throws BadRequestException
+     * @throws ValidationException
+     * @return JsonResponse
+     */
+    public function addComment($id): JsonResponse
+    {
+        $this->validate($this->request, Comment::$rules);
+        if (empty($this->request->input())) {
+           throw new BadRequestException('No ratings or comment provided');
+        }
+        $userId = Auth::user()->getAuthIdentifier();
+        $response = $this->commentDomain->newComment($userId, $id, $this->get('comment'), $this->get('rating'));
+
+        if (!empty($response)) {
+            return response()->json([
+                'message' => 'success',
+                'data'    => $response
+            ]);
+        }
+        return response()->json([
+            'message' => 'error'
+        ], 500);
+    }
+
+    /**
+     * Retrieves songs.
+     *
+     * @return JsonResponse
+     */
+    public function getSongs(): JsonResponse
+    {
+        $filters = $this->request->input();
+        $response = $this->musicDomain->getSongs($filters);
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response
+        ]);
     }
 }
