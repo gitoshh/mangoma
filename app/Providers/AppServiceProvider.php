@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Filesystem\FilesystemServiceProvider;
 
@@ -17,5 +18,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('filesystem', static function ($app) {
             return $app->loadComponent('filesystems', FilesystemServiceProvider::class, 'filesystem');
         });
+    }
+
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
     }
 }
