@@ -7,13 +7,21 @@
     "require": {
         "php": ">=7.1.3",
         "ext-json": "*",
+        "barryvdh/laravel-dompdf": "^0.8.4",
         "firebase/php-jwt": "^5.0",
         "illuminate/mail": "^5.7",
+        "laravel/cashier": "^9.3",
         "laravel/lumen-framework": "5.8.*",
         "laravelista/lumen-vendor-publish": "^2.1",
         "pearl/lumen-request-validate": "^1.0",
         "proshore/entrust-lumen": "1.0.2",
-        "vlucas/phpdotenv": "^3.3"
+        "superbalist/laravel-google-cloud-storage": "^2.2",
+        "vlucas/phpdotenv": "^3.3",
+        "league/flysystem-sftp": "~1.0",
+        "google/cloud-storage": "~1.0",
+        "illuminate/filesystem": "~5.8",
+        "illuminate/support": "~5.8",
+        "league/flysystem": "1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
@@ -22,6 +30,7 @@
     },
     "autoload": {
         "classmap": [
+            "database/migrations",
             "database/seeds",
             "database/factories"
         ],

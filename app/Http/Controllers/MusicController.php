@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use App\Http\Transformers\MusicTransformer;
 
@@ -70,11 +71,11 @@ class MusicController extends Controller
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
 
-        $location = public_path('audio/');
-        $uniqueName = uniqid('audio_', true);
-        $uniqueNameExtension = $uniqueName.'.'.$extension;
-        $musicFile->move($location, $uniqueNameExtension);
-        $location = $location.'/'.$uniqueNameExtension;
+        // Store to google cloud
+        $disk = Storage::disk('gcs');
+        $response = $disk->put('audio', $musicFile);
+        $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response;
+        $uniqueName = explode('/', $response)[1];
 
         $response = $this->musicDomain->newMusic(
             $title,
@@ -130,12 +131,15 @@ class MusicController extends Controller
 
         if (!empty($this->request->file('song'))) {
             $musicFile = $this->request->file('song');
+            $disk = Storage::disk('gcs');
+            dd($disk->put('audio', $musicFile));
             $location = public_path('audio/');
+
             $originalName = $musicFile->getClientOriginalName();
             $uniqueName = uniqid('audio_', true);
             $extension = $musicFile->getClientOriginalExtension();
             $uniqueNameExtension = $uniqueName.'.'.$extension;
-            $musicFile->move($location, $uniqueNameExtension);
+            dd($musicFile->storeAs('audio', $uniqueNameExtension));
             $location = $location.'/'.$uniqueNameExtension;
 
             $payload['location'] = $location;

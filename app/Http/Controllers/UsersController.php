@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domains\User as UserDomain;
 use App\User as UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
 {
@@ -27,6 +28,7 @@ class UsersController extends Controller
 
     /**
      * Adds a new user.
+     * @throws ValidationException
      */
     public function new()
     {

@@ -21,9 +21,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
- $app->withFacades();
+$app->withFacades();
 
- $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +46,16 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    static function ($app) {
+        return new Illuminate\Filesystem\FilesystemManager($app);
+    });
+
+$app->configure('filesystems');
 $app->configure('auth');
 $app->configure('permission');
+$app->configure('Services');
 
 /*
 |--------------------------------------------------------------------------
@@ -64,11 +72,11 @@ $app->configure('permission');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
- $app->routeMiddleware([
-     'auth'       => App\Http\Middleware\Authenticate::class,
-     'role'       => Zizaco\Entrust\Middleware\EntrustRole::class,
-     'permission' => Zizaco\Entrust\Middleware\EntrustPermission::class,
-     'ability'    => Zizaco\Entrust\Middleware\EntrustAbility::class,
+$app->routeMiddleware([
+    'auth'       => App\Http\Middleware\Authenticate::class,
+    'role'       => Zizaco\Entrust\Middleware\EntrustRole::class,
+    'permission' => Zizaco\Entrust\Middleware\EntrustPermission::class,
+    'ability'    => Zizaco\Entrust\Middleware\EntrustAbility::class,
  ]);
 
 /*
@@ -77,19 +85,24 @@ $app->configure('permission');
 |--------------------------------------------------------------------------
 |
 | Here we will register all of the application's service providers which
-| are used to bind services into the container. Service providers are
+| are used to bind Services into the container. Service providers are
 | totally optional, so you are not required to uncomment this line.
 |
 */
 
- $app->register(App\Providers\AppServiceProvider::class);
- $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
  // $app->register(App\Providers\EventServiceProvider::class);
- $app->register(Zizaco\Entrust\EntrustServiceProvider::class);
+$app->register(Zizaco\Entrust\EntrustServiceProvider::class);
+$app->register(Laravel\Cashier\CashierServiceProvider::class);
+$app->register(Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class);
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
 
 $app->withFacades(true,
     [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
+        'Storage'    => Illuminate\Support\Facades\Storage::class
     ]);
 
 /*

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "theta-camera-235315",
+  "private_key_id": "a82a208ef4197ee3c989ff850ccfdf815676f832",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIW4sbwZqjq46p\nn5FqqlFe/K7FxUl8MtNDmFcuJXmli9Y/QR4VlhbY2lwYI+bJDnuBPGOpJwdCgjEc\nLfjm/rGyUvgBYPuVk0R7U+s9bkbPG398p0DpKDwsLgZ2DZPhyf1RqkGKg/bSB3U3\nibfX+GUOI322qizDNufwbpOT8TEy5nJFiGeCQwZ7ko1tPfbP50muvOoLnafI9uCS\n2KWe+yh6tLbNJ55cUZbRyam9LEsRkOpLdg2fi7qeiYdzKEvzWpM95W6f7aRiPJzP\nbtucoDm3naaLtMbIcr7uD0eKU5h0QbjwGh9AZ/78ZYTUNHzTbCAOhJ0BbMIHa0dM\nIeJcOIqhAgMBAAECggEAT8mYz6BdRzFyGh2H6MzTo7qHlQ2YUoPg+umnSiK1W1Yh\nJ0Z0xw7ioU/v3dMqPEXurAwS+hEnRHaZPQoXtVGXDRcaWV44QhwH6P8FzoxkWWSv\nc8IdSNxzffqEKy4EBqYMIaHmANXFjGVY6hmHY1OxVpyOmxgQxFrQqcA3N/KUb5p9\n2H3ZniaQnFcYgDO2DaneReurm1tpFZ/OQ8+sj7hmu4ZbJYyF/efpKZTCB+be/ER7\nRi4paYgYymdBDT3QR+/NrNncUnd+SQAA95Kmqr0rZiS02uUFuZnAnQxWLZ1IkHE3\nKSmEvwjow2I/KoKKMsklETYhnPTIuyq0RhnsWyL0CwKBgQD01tn1tmAxzKvpgsSL\nw8vbDDZ2xfNZg3/3IDbfaquaSViTlwkHmn1kBn8yYbI2oJ7owMIuSY5MlI9QZcfM\nQ7kBC/y3eMc8gjfRdRUqG9FuqhkGJ8mzbBnYgYua2GatDL/vGiMWxjKD28J2CJmn\niPe/A8kRJa4OsxlIDE8/9rHcpwKBgQDRfZ0bJhAwnnG/grZye9ZWlxalqSDWk6cu\n3Ccb75vjtVWKEIUbcG4PxWvFhgyCdR6QHmv5+unSysNOA+DVookJpbk1c0eIfXNC\nNnBAb5v8c+X9mChCD2VcPdz/en7HC4o/ZxZW49NiGhRcaU/RHSnCM4+CtKq6QUgc\nNRW89C9fdwKBgQCEJG1woyTZ29gw6IYB1QPyTm4avo2vkzx+eWGERYMme02WIp8Z\n/nSMhsEhxP61Yw1BG7/x0Xs+s7OBtd0WzrpL6VdVApetfa54mtN4bZkkPCPTYagH\n8WElrA1X3lHUNhxlBNtJUGE1L2eN4uhjNpZX/sgHPCnr/xe2/gXLxO6L4wKBgAuu\nG0JWPvTXALSSzyVW7j5psiOOaHxOQzYDpFKUa3aot5o5DZLYE+rhMP8UWEI10Xxr\nlc2cRckw8O66nKCMrWNSUB9AzC46AGEis+OD1Yif1aTsBOKaBSa9dELyS3tBk3Wx\ng7dYgIKpvZThckfQfnGLembpN9OmrCSWeR3N545FAoGAN6+mG59VwPuvCf6iDBrn\nNFFwe3weX2glry2OGNRYOaii5cFtiJWnnfDRA4SXDyQNQbDp5PQmQ64dIkC3/Fze\nv+IC51gJp47UzoZKwHiZ+fh/Qo5k7N4finKmuV4P4WmcIFZ+fmJLwzZnlzBKcQva\nVj/qHlV2xLMP7ta35Gu6iW0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "theta-project@theta-camera-235315.iam.gserviceaccount.com",
+  "client_id": "102882516201342636664",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/theta-project%40theta-camera-235315.iam.gserviceaccount.com"
+}

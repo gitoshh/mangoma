@@ -26,6 +26,16 @@ $router->group([
 
 $router->group([
     'middleware' => ['auth', 'role:Artiste|Admin'],
+    'prefix'     => 'album',
+], static function () use ($router) {
+    $router->post('/', 'AlbumController@createNewAlbum');
+    $router->post('/{id}/song', 'AlbumController@addSong');
+    $router->put('/{id}', 'AlbumController@updateAlbum');
+    $router->delete('/{id}', 'AlbumController@deleteAlbum');
+});
+
+$router->group([
+    'middleware' => ['auth', 'role:Artiste|Admin'],
     'prefix'     => 'music',
 ], static function () use ($router) {
     $router->post('/', 'MusicController@addNewSong');
@@ -63,4 +73,14 @@ $router->group([
     'prefix'     => 'favourite',
 ], static function () use ($router) {
     $router->get('/', 'FavouriteController@getFavouriteSongs');
+});
+
+$router->group([
+    'middleware' => ['auth',],
+    'prefix'     => 'stripe'
+], static function() use ($router) {
+    $router->post('/token', 'PaymentController@createToken');
+    $router->post('/subscription', 'PaymentController@newSubscription');
+    $router->get('/invoices', 'PaymentController@viewInvoices');
+    $router->get('/invoices/{id}', 'PaymentController@downloadInvoice');
 });

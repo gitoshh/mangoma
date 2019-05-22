@@ -9,4 +9,6 @@ return [
     ],
     'unique'   => 'The :attribute field already exists',
     'required' => 'The :attribute field is required.',
+    'string'   => 'The :attribute field should be a string',
+    'regex'    => 'The :attribute field should have at least a letter, number and special character'
 ];
