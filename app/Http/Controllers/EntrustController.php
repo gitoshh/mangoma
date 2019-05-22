@@ -40,7 +40,7 @@ class EntrustController extends Controller
         $payload = $this->request->input();
         $response = $this->entrustDomain->newRole(
             $payload['name'],
-            $payload['display'] ?? null,
+            $payload['display_name'] ?? null,
             $payload['description'] ?? null
         );
 
