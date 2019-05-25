@@ -13,10 +13,18 @@ class AlbumTableSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker\Factory::create();
+
         DB::table('album')->insert([
             'title'       => 'new album',
             'artistes'    => 'Jhene, Sean',
-            'releaseDate' => Carbon::parse('12/12/2014'),
+            'releaseDate' => Carbon::parse('12/12/2014')->toDate(),
+        ]);
+
+        DB::table('album')->insert([
+            'title'  => $faker->title,
+            'artistes' => $faker->firstName,
+            'releaseDate' => $faker->date()
         ]);
     }
 

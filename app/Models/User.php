@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract
      */
     public static $loginRules = [
         'email'    => 'required|email',
-        'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%@*&]).*$/',
+        'password' => 'required',
     ];
 
     /**

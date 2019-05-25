@@ -17,7 +17,8 @@ class CreatePlaylistTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->integer('creator');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
         });
     }
 

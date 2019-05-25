@@ -3,6 +3,7 @@
 namespace App\Domains;
 
 use App\Album as AlbumModel;
+use Carbon\Carbon;
 
 class Album
 {
@@ -11,17 +12,17 @@ class Album
      *
      * @param string $title
      * @param string $releaseDate
-     * @param array $artistes
+     * @param string $artistes
      * @return array
      */
     public function newAlbum(
         string $title,
         string $releaseDate,
-        array $artistes
+        string $artistes
     ): array {
         $album = new AlbumModel();
         $album->title = $title;
-        $album->releaseDate = $releaseDate;
+        $album->releaseDate = Carbon::parse($releaseDate)->toDateString();
         $album->artistes = $artistes;
         if ($album->save()) {
             return $album->toArray();

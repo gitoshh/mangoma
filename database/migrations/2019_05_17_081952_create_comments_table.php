@@ -19,7 +19,8 @@ class CreateCommentsTable extends Migration
             $table->smallInteger('rating')->nullable();
             $table->unsignedInteger('userId');
             $table->unsignedInteger('musicId');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
 
             $table->foreign('userId')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

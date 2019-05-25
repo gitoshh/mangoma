@@ -18,7 +18,8 @@ class CreateAlbumTable extends Migration
             $table->string('title');
             $table->string('artistes');
             $table->date('releaseDate');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
         });
     }
 

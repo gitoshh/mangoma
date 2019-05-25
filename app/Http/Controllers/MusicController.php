@@ -128,12 +128,14 @@ class MusicController extends Controller
                 'albumId' => $this->request->input('albumId'),
             ];
         }
-
         if (!empty($this->request->file('song'))) {
+            $music = MusicModel::find($id)->get('location');
+            dd($music);
             $musicFile = $this->request->file('song');
             $disk = Storage::disk('gcs');
-            dd($disk->put('audio', $musicFile));
-            $location = public_path('audio/');
+            $disk->delete('audio');
+            $response = $disk->put('audio', $musicFile);
+            $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response;
 
             $originalName = $musicFile->getClientOriginalName();
             $uniqueName = uniqid('audio_', true);

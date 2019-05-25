@@ -8,6 +8,7 @@ use App\Favourite;
 use App\Music as MusicModel;
 use App\User as UserModel;
 use Exception;
+use Illuminate\Database\QueryException;
 
 class Music
 {
@@ -116,11 +117,12 @@ class Music
 
     /**
      * Adds a many to many relationship for user and music.
+     *
      * @param int $musicId
      * @param int $userId
      * @param int $recommendedBy
+     * @throws BadRequestException
      * @throws NotFoundException
-     * @throws Exception
      */
     public function attachMusic(int $musicId, int $userId, int $recommendedBy): void
     {
@@ -187,14 +189,19 @@ class Music
      * @param int $userId
      * @param int $songId
      * @return array
+     * @throws Exception
      */
     public function favouriteSong(int $userId, int $songId): array
     {
-        $favourite = new Favourite();
-        $favourite->user_id = $userId;
-        $favourite->music_id = $songId;
-        if ($favourite->save()) {
-            return $favourite->toArray();
+        try {
+            $favourite = new Favourite();
+            $favourite->user_id = $userId;
+            $favourite->music_id = $songId;
+            if ($favourite->save()) {
+                return $favourite->toArray();
+            }
+        } catch (QueryException $exception) {
+            throw new Exception('Song already exists');
         }
     }
 }

@@ -12,7 +12,7 @@ class UsersControllerTest extends BaseTest
         $this->payload = [
             'name'     => 'Godwin Gitonga',
             'email'    => 'godwingitonga@gmail.com',
-            'password' => '123123123',
+            'password' => '@123123A',
         ];
     }
 

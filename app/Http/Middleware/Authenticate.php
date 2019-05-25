@@ -46,15 +46,21 @@ class Authenticate
             $token = $request->header('token');
 
             if ($token === null) {
-                return response('Unauthorized.', 401);
+                return response()->json([
+                    'message' => 'Unauthorized.'
+                ], 401);
             }
 
             try {
                 $decoded = JWT::decode($token, getenv('JWT_TOKEN'), ['HS256']);
             } catch (ExpiredException $e) {
-                return response('Expired Token.', 401);
+                return response()->json([
+                    'message' => 'Expired Token.'
+                ], 401);
             } catch (SignatureInvalidException $e) {
-                return response('Invalid Token.', 401);
+                return response()->json([
+                    'message' => 'Invalid Token.'
+                ], 401);
             }
 
             $user = UserModel::find($decoded->sub);
@@ -66,7 +72,9 @@ class Authenticate
                 return $next($request);
             }
 
-            return response('Unauthorized.', 401);
+            return response()->json([
+                'message' => 'Unauthorized.'
+            ], 401);
         }
     }
 }

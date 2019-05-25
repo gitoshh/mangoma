@@ -11,7 +11,7 @@ class Genre extends Model
     ];
 
     public static $rules = [
-        'name' => 'string|required',
+        'name' => 'string|required|unique:genres',
     ];
 
 }

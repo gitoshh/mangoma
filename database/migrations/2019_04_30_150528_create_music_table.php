@@ -22,7 +22,12 @@ class CreateMusicTable extends Migration
             $table->string('uniqueName');
             $table->string('artistes');
             $table->unsignedInteger('album_id')->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('genreId');
+            $table->foreign('genreId')->references('id')->on('genres')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
         });
     }
 

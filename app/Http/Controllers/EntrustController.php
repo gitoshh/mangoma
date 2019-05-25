@@ -64,7 +64,7 @@ class EntrustController extends Controller
         $payload = $payload = $this->request->input();
         $response = $this->entrustDomain->newPermission(
             $payload['name'],
-            $payload['display'] ?? null,
+            $payload['display_name'] ?? null,
             $payload['description'] ?? null
         );
 

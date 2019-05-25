@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Album extends Model
 {
+    protected $table = 'album';
+
     protected $fillable = [
         'title','releaseDate', 'artistes',
     ];
@@ -14,7 +16,7 @@ class Album extends Model
     public static $rules = [
         'title'       => 'required|string',
         'releaseDate' => 'required| string',
-        'artistes'    => 'json',
+        'artistes'    => 'string',
     ];
 
     /**
