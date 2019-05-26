@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Domains\Comment as CommentDomain;
 use App\Domains\Music as MusicDomain;
+use App\Domains\Playlist as PlaylistDomain;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
 use App\Music as MusicModel;
@@ -34,23 +35,31 @@ class MusicController extends Controller
     private $commentDomain;
 
     /**
+     * @var PlaylistDomain
+     */
+    private $playlistDomain;
+
+    /**
      * MusicController constructor.
      *
      * @param Request $request
      * @param MusicDomain $musicDomain
      * @param MusicTransformer $musicTransformer
      * @param CommentDomain $commentDomain
+     * @param PlaylistDomain $playlistDomain
      */
     public function __construct(
         Request $request,
         MusicDomain $musicDomain,
         MusicTransformer $musicTransformer,
-        CommentDomain $commentDomain
+        CommentDomain $commentDomain,
+        PlaylistDomain $playlistDomain
     ) {
         parent::__construct($request);
         $this->musicDomain = $musicDomain;
         $this->musicTransformer = $musicTransformer;
         $this->commentDomain = $commentDomain;
+        $this->playlistDomain = $playlistDomain;
     }
 
     /**
@@ -129,11 +138,10 @@ class MusicController extends Controller
             ];
         }
         if (!empty($this->request->file('song'))) {
-            $music = MusicModel::find($id)->get('location');
-            dd($music);
-            $musicFile = $this->request->file('song');
             $disk = Storage::disk('gcs');
-            $disk->delete('audio');
+            $olderLocation = MusicModel::find($id)->get('location');
+            $disk->delete($olderLocation);
+            $musicFile = $this->request->file('song');
             $response = $disk->put('audio', $musicFile);
             $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response;
 
@@ -141,7 +149,6 @@ class MusicController extends Controller
             $uniqueName = uniqid('audio_', true);
             $extension = $musicFile->getClientOriginalExtension();
             $uniqueNameExtension = $uniqueName.'.'.$extension;
-            dd($musicFile->storeAs('audio', $uniqueNameExtension));
             $location = $location.'/'.$uniqueNameExtension;
 
             $payload['location'] = $location;
@@ -190,6 +197,7 @@ class MusicController extends Controller
      *
      * @param int $id
      * @return JsonResponse
+     * @throws BadRequestException
      * @throws NotFoundException
      */
     public function recommendSong(int $id): JsonResponse
@@ -251,6 +259,7 @@ class MusicController extends Controller
      *
      * @param int $id
      * @return JsonResponse
+     * @throws Exception
      */
     public function addFavourite(int $id): JsonResponse
     {
@@ -263,5 +272,24 @@ class MusicController extends Controller
             'message' => 'success',
             'data'    => $response
         ]);
+    }
+
+    /**
+     * Add a song to the playlist.
+     *
+     * @param int $id
+     *
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function addToPlaylist(int $id): JsonResponse
+    {
+        $playlistId = $this->get('playlistId');
+        $this->playlistDomain->attachSong($playlistId, $id);
+
+        return response()->json([
+            'message'=> 'success'
+        ]);
+
     }
 }

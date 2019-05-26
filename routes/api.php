@@ -50,6 +50,7 @@ $router->group([
     $router->post('/{id}/recommend', 'MusicController@recommendSong');
     $router->post('/{id}/comment', 'MusicController@addComment');
     $router->post('/{id}/favourite', 'MusicController@addFavourite');
+    $router->post('/{id}/playlist', 'MusicController@addToPlaylist');
     $router->get('/', 'MusicController@getSongs');
 });
 
@@ -58,6 +59,8 @@ $router->group([
     'prefix'     => 'playlist',
 ], static function () use ($router) {
     $router->post('/', 'PlaylistController@create');
+    $router->get('/', 'PlaylistController@getPlaylists');
+    $router->post('/{id}/share', 'PlaylistController@sharePlaylist');
     $router->delete('/{id}', 'PlaylistController@deletePlaylist');
 });
 
@@ -66,6 +69,7 @@ $router->group([
     'prefix'     => 'genre',
 ], static function () use ($router) {
     $router->post('/', 'GenreController@addNewGenre');
+    $router->get('/', 'GenreController@getGenre');
 });
 
 $router->group([

@@ -32,6 +32,21 @@ class PlaylistController extends Controller
     }
 
     /**
+     * Retrieve playlists.
+     *
+     * @return JsonResponse
+     */
+    public function getPlaylists(): JsonResponse
+    {
+        $searchParams = $this->get('title');
+        $response = $this->playlistDomain->fetchPlaylists($searchParams);
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response,
+        ]);
+    }
+
+    /**
      * Creates a new playlist.
      *
      * @return JsonResponse
@@ -48,24 +63,6 @@ class PlaylistController extends Controller
             'message' => 'success',
             'data'    => $response
         ]);
-    }
-
-    /**
-     * Add a song to the playlist.
-     *
-     * @param int $id
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function addSong(int $id)
-    {
-        $musicId = $this->get('songId');
-        $this->playlistDomain->attachSong($id, $musicId);
-
-        return response()->json([
-            'message'=> 'success'
-        ]);
-
     }
 
     /**

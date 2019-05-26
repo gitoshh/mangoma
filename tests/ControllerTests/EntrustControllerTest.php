@@ -26,7 +26,7 @@ class EntrustControllerTest extends BaseTest
             'email'    => 'test.user@gmail.com',
             'password' => 'A123123@',
         ]);
-        $this->token = json_decode($this->response->getContent())->token;
+        $this->token = json_decode($this->response->getContent(), true)['token'];
     }
 
     public function testCreateAdminRoleSuccessfully(): void

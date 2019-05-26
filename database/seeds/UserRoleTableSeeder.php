@@ -9,7 +9,7 @@ class UserRoleTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         DB::table('role_user')->insert([
             'user_id' => '1',

@@ -43,6 +43,33 @@ class Playlist
     }
 
     /**
+     * Retrieve  playlists.
+     *
+     * @param string|null $searchParams
+     * @return array
+     */
+    public function fetchPlaylists(?string $searchParams = null): array
+    {
+        if ($searchParams) {
+            $playlists = PlaylistModel::where('title', 'LIKE', $searchParams)->get();
+        } else {
+            $playlists = PlaylistModel::all();
+        }
+
+        $response = [];
+
+        foreach ($playlists as $item) {
+            $response [] = [
+                'name' => $item->name,
+                'creator' => $item->creator,
+                'music' => $item->music()->get()->toArray(),
+            ];
+        }
+
+        return $response;
+    }
+
+    /**
      * Add relationship between playlist and song.
      *
      * @param int $playlistId

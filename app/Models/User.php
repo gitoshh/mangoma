@@ -62,4 +62,14 @@ class User extends Model implements AuthenticatableContract
     {
         return $this->belongsToMany(Playlist::class);
     }
+
+    /**
+     * The recommended music that belong to the user.
+     *
+     * @return BelongsToMany
+     */
+    public function recommend(): BelongsToMany
+    {
+        return $this->belongsToMany('Recommend');
+    }
 }

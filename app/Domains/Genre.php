@@ -20,4 +20,30 @@ class Genre
             return $genre->toArray();
         }
     }
+
+    /**
+     * Retrieves genres.
+     *
+     * @param string|null $searchParams
+     * @return array
+     */
+    public function FetchCategories(?string $searchParams = null): array
+    {
+        $response = [];
+        if ($searchParams) {
+            $genres = GenreModel::where('name', 'LIKE', $searchParams)->get();
+        } else {
+            $genres = GenreModel::all();
+        }
+
+        foreach ($genres as $item) {
+            $response[] =  [
+                'name'  => $item->name,
+                'songs' => $item->music()->get()->toArray(),
+            ];
+        }
+
+        return $response;
+
+    }
 }

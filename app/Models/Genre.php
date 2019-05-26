@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Genre extends Model
 {
@@ -13,5 +14,10 @@ class Genre extends Model
     public static $rules = [
         'name' => 'string|required|unique:genres',
     ];
+
+    public function music(): HasMany
+    {
+        return $this->hasMany(Music::class, 'genreId');
+    }
 
 }

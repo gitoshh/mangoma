@@ -17,7 +17,7 @@ class MusicControllerTest extends BaseTest
             'email'    => 'test.user@gmail.com',
             'password' => 'A123123@',
         ]);
-        $this->token = json_decode($this->response->getContent())->token;
+        $this->token = json_decode($this->response->getContent(), true)['token'];
     }
 
     public function testArtisteCanAddMusicSuccessfully(): void
@@ -46,6 +46,6 @@ class MusicControllerTest extends BaseTest
         $this->headers['token'] = $this->token;
         $this->headers['Content-Type'] = 'multipart/form-data';
         $this->call('PUT', '/music/1', $payload, [], [], $this->transformHeadersToServerVars($this->headers));
-        $this->assertResponseOk();
+        $this->assertResponseStatus(202);
     }
 }

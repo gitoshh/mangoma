@@ -22,13 +22,18 @@ class GenreController extends Controller
      * @param Request $request
      * @param GenreDomain $genreDomain
      */
-    public function __construct(Request $request, GenreDomain $genreDomain)
+    public function __construct(
+        Request $request,
+        GenreDomain $genreDomain
+    )
     {
         parent::__construct($request);
         $this->genreDomain = $genreDomain;
     }
 
     /**
+     * Create a new genre.
+     *
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -38,7 +43,22 @@ class GenreController extends Controller
         $response = $this->genreDomain->newGenre($this->get('name'));
         return response()->json([
             'message' => 'success',
-            'data'    => $response
+            'data'    => $response,
+        ]);
+    }
+
+    /**
+     * Fetch genres|a genre and its music.
+     * @return JsonResponse
+     */
+    public function getGenre(): JsonResponse
+    {
+        $searchParams = $this->get('name');
+        $response = $this->genreDomain->FetchCategories($searchParams);
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response,
         ]);
     }
 }
