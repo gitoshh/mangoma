@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model
 {
     protected $fillable = [
-        'comment','rating', 'userId', 'musicId',
+        'comment', 'rating', 'userId', 'musicId',
     ];
 
     public static $rules = [
@@ -23,5 +23,4 @@ class Comment extends Model
     {
         return $this->belongsTo(Music::class);
     }
-
 }

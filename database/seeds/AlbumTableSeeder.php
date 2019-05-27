@@ -22,10 +22,9 @@ class AlbumTableSeeder extends Seeder
         ]);
 
         DB::table('album')->insert([
-            'title'  => $faker->title,
-            'artistes' => $faker->firstName,
-            'releaseDate' => $faker->date()
+            'title'       => $faker->title,
+            'artistes'    => $faker->firstName,
+            'releaseDate' => $faker->date(),
         ]);
     }
-
 }

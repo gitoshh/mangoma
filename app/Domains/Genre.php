@@ -11,6 +11,7 @@ class Genre
      * Creates new genre.
      *
      * @param string $name
+     *
      * @return array
      */
     public function newGenre(string $name): array
@@ -26,6 +27,7 @@ class Genre
      * Retrieves genres.
      *
      * @param string|null $searchParams
+     *
      * @return array
      */
     public function FetchCategories(?string $searchParams = null): array
@@ -38,7 +40,7 @@ class Genre
         }
 
         foreach ($genres as $item) {
-            $response[] =  [
+            $response[] = [
                 'name'  => $item->name,
                 'songs' => $item->music()->get()->toArray(),
             ];
@@ -51,6 +53,7 @@ class Genre
      * Remove genre by id.
      *
      * @param int $id
+     *
      * @throws NotFoundException
      */
     public function deleteGenre(int $id): void

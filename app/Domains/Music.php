@@ -9,7 +9,6 @@ use App\Music as MusicModel;
 use App\User as UserModel;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
 
 class Music
 {
@@ -21,10 +20,10 @@ class Music
      * @param string $originalName
      * @param string $extension
      * @param string $uniqueName
-     *
      * @param string $artistes
-     * @param int $genreId
-     * @param int $albumId
+     * @param int    $genreId
+     * @param int    $albumId
+     *
      * @return array
      */
     public function newMusic(
@@ -44,7 +43,7 @@ class Music
             'extension'    => $extension,
             'uniqueName'   => $uniqueName,
             'artistes'     => $artistes,
-            'genreId'      => $genreId
+            'genreId'      => $genreId,
         ]);
         if ($albumId) {
             $newMusic->album_id = $albumId;
@@ -122,6 +121,7 @@ class Music
      * @param int $musicId
      * @param int $userId
      * @param int $recommendedBy
+     *
      * @throws BadRequestException
      * @throws NotFoundException
      */
@@ -132,22 +132,22 @@ class Music
         }
 
         $user = UserModel::find($userId);
-        if(!$user) {
+        if (!$user) {
             throw new NotFoundException('user not found');
         }
 
         $music = MusicModel::find($musicId);
-        if(!$music) {
+        if (!$music) {
             throw new NotFoundException('song not found!');
         }
         $music->user()->attach($userId, ['recommended_by' => $recommendedBy]);
-
     }
 
     /**
      * Fetch all songs with filters applied.
      *
      * @param array|null $filters
+     *
      * @return array
      */
     public function getSongs(?array $filters = null): array
@@ -159,7 +159,7 @@ class Music
             'extension',
             'originalName',
             'uniqueName',
-            'artistes'
+            'artistes',
         ]);
         if ($filters) {
             foreach ($filters as $key => $value) {
@@ -189,7 +189,7 @@ class Music
         }
         $response = [];
 
-        foreach ($songs->get() as $item){
+        foreach ($songs->get() as $item) {
             $response[] = [
                 'id'           => $item->id,
                 'title'        => $item->title,
@@ -198,10 +198,10 @@ class Music
                 'originalName' => $item->originalName,
                 'uniqueName'   => $item->uniqueName,
                 'artistes'     => $item->artistes,
-                'comments'     => $item->comment()->get(['id', 'comment', 'rating', 'userId'])->toArray()
+                'comments'     => $item->comment()->get(['id', 'comment', 'rating', 'userId'])->toArray(),
             ];
-
         }
+
         return $response;
     }
 
@@ -210,8 +210,10 @@ class Music
      *
      * @param int $userId
      * @param int $songId
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     public function favouriteSong(int $userId, int $songId): array
     {
@@ -226,5 +228,4 @@ class Music
             throw new Exception('Song already exists');
         }
     }
-
 }

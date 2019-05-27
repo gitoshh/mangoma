@@ -25,7 +25,7 @@ class MusicControllerTest extends BaseTest
         $payload = [
             'title'    => 'Another new song',
             'artistes' => 'Sean, Jhene',
-            'genreId'  => 1
+            'genreId'  => 1,
         ];
         $song = [
             'song'  => UploadedFile::fake()->create('music.mp3', 1300),

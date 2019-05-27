@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Domains\Entrust as EntrustDomain;
 use App\Exceptions\BadRequestException;
 use App\Role;
-use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,36 +32,36 @@ class PaymentController extends Controller
      * Creates new token from card information.
      *
      * @throws BadRequestException
+     *
      * @return JsonResponse
      */
     public function createToken():JsonResponse
     {
-        try{
+        try {
             $payload = $this->request->only([
                 'number',
                 'exp_month',
                 'exp_year',
-                'cvc'
+                'cvc',
             ]);
         } catch (Exception $exception) {
             throw new BadRequestException('Invalid payload');
         }
 
-
         Stripe::setApiKey(getenv('STRIPE_KEY'));
 
         $token = Token::create([
             'card' => [
-                'number' => $payload['number'],
+                'number'    => $payload['number'],
                 'exp_month' => $payload['exp_month'],
-                'exp_year' => $payload['exp_year'],
-                'cvc' => $payload['cvc']
-            ]
+                'exp_year'  => $payload['exp_year'],
+                'cvc'       => $payload['cvc'],
+            ],
         ]);
 
         return response()->json([
             'message' => 'success',
-            'data'    => $token
+            'data'    => $token,
         ]);
     }
 
@@ -74,14 +73,13 @@ class PaymentController extends Controller
     public function newSubscription(): JsonResponse
     {
         $token = $this->get('stripeToken');
-        $response = Auth::user()->newSubscription('Mangoma premium account','plan_F6HqCkiweMUWGW')->create($token, [
-            'email' => Auth::user()->email,
-        ]);
+        $response = Auth::user()->newSubscription('Mangoma premium account', 'plan_F6HqCkiweMUWGW')
+            ->create($token, ['email' => Auth::user()->email]);
 
         if (Auth::user()->subscribed('Mangoma premium account')) {
             $roleId = null;
             $role = Role::where('name', 'Premium')->first();
-            if(!empty($role)) {
+            if (!empty($role)) {
                 $roleId = $role['id'];
             } else {
                 $response = $this->entrustDomain->newRole('Premium', 'premium');
@@ -97,7 +95,7 @@ class PaymentController extends Controller
     }
 
     /**
-     * Cancel user subscription
+     * Cancel user subscription.
      */
     public function cancelSubscription()
     {
@@ -107,7 +105,6 @@ class PaymentController extends Controller
             'message' => 'success',
             'data'    => $response,
         ]);
-
     }
 
     /**
@@ -128,6 +125,7 @@ class PaymentController extends Controller
                 'invoice_pdf' => $item->invoice_pdf,
                 ];
         }
+
         return response()->json([
             'message'=> 'success',
             'data'   => $invoices,
@@ -136,17 +134,18 @@ class PaymentController extends Controller
 
     /**
      * Retrieves user invoices.
+     *
      * @param string $id
+     *
      * @return resource
      */
     public function downloadInvoice(string $id)
     {
         $data = [
             'vendor'  => self::STRIPE_VENDOR,
-            'product' => self::STRIPE_PRODUCT
+            'product' => self::STRIPE_PRODUCT,
         ];
 
         return Auth::user()->downloadInvoice($id, $data);
     }
-
 }

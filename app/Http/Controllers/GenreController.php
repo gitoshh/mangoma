@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Domains\Genre as GenreDomain;
@@ -20,14 +19,13 @@ class GenreController extends Controller
     /**
      * GenreController constructor.
      *
-     * @param Request $request
+     * @param Request     $request
      * @param GenreDomain $genreDomain
      */
     public function __construct(
         Request $request,
         GenreDomain $genreDomain
-    )
-    {
+    ) {
         parent::__construct($request);
         $this->genreDomain = $genreDomain;
     }
@@ -35,13 +33,15 @@ class GenreController extends Controller
     /**
      * Create a new genre.
      *
-     * @return JsonResponse
      * @throws ValidationException
+     *
+     * @return JsonResponse
      */
     public function addNewGenre(): JsonResponse
     {
         $this->validate($this->request, Genre::$rules);
         $response = $this->genreDomain->newGenre($this->get('name'));
+
         return response()->json([
             'message' => 'success',
             'data'    => $response,
@@ -50,6 +50,7 @@ class GenreController extends Controller
 
     /**
      * Fetch genres|a genre and its music.
+     *
      * @return JsonResponse
      */
     public function getGenre(): JsonResponse
@@ -67,14 +68,17 @@ class GenreController extends Controller
      * Removes a genre by id.
      *
      * @param $id
-     * @return JsonResponse
+     *
      * @throws NotFoundException
+     *
+     * @return JsonResponse
      */
     public function deleteGenre($id): JsonResponse
     {
         $this->genreDomain->deleteGenre($id);
+
         return response()->json([
-            'message' => 'success'
+            'message' => 'success',
         ]);
     }
 }

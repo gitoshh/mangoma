@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Exceptions;
-
 
 interface GeneralExceptionInterface
 {
@@ -14,24 +12,23 @@ interface GeneralExceptionInterface
     public function reports();
 
     /**
-     * Get extra parameters
+     * Get extra parameters.
      *
      * @return array
      */
     public function getParams();
 
     /**
-     * Get the error code
+     * Get the error code.
      *
      * @return string
      */
     public function getErrorCode();
 
     /**
-     * Get the associated error code
+     * Get the associated error code.
      *
      * @return int
      */
     public function getHttpErrorCode();
-
 }

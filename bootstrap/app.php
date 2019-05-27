@@ -102,7 +102,7 @@ $app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
 $app->withFacades(true,
     [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
-        'Storage'    => Illuminate\Support\Facades\Storage::class
+        'Storage' => Illuminate\Support\Facades\Storage::class,
     ]);
 
 /*

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Album as AlbumModel;
 use App\Domains\Album;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Album as AlbumModel;
 use Illuminate\Validation\ValidationException;
 
 class AlbumController extends Controller
@@ -19,7 +19,7 @@ class AlbumController extends Controller
      * AlbumController constructor.
      *
      * @param Request $request
-     * @param Album $albumDomain
+     * @param Album   $albumDomain
      */
     public function __construct(Request $request, Album $albumDomain)
     {
@@ -35,19 +35,19 @@ class AlbumController extends Controller
     public function fetchAlbums(): JsonResponse
     {
         $searchParams = [];
-        if($this->get('title')){
+        if ($this->get('title')) {
             $searchParams['title'] = $this->get('title');
         }
 
-        if($this->get('artistes')){
+        if ($this->get('artistes')) {
             $searchParams['artistes'] = $this->get('artistes');
         }
 
-        if($this->get('releaseDate')){
+        if ($this->get('releaseDate')) {
             $searchParams['releaseDate'] = $this->get('releaseDate');
         }
 
-        $response =  $this->albumDomain->getAllAlbums($searchParams);
+        $response = $this->albumDomain->getAllAlbums($searchParams);
 
         return response()->json([
             'message' => 'success',
@@ -58,8 +58,9 @@ class AlbumController extends Controller
     /**
      * Add new album.
      *
-     * @return JsonResponse
      * @throws ValidationException
+     *
+     * @return JsonResponse
      */
     public function createNewAlbum(): JsonResponse
     {
@@ -73,7 +74,7 @@ class AlbumController extends Controller
 
         return response()->json([
             'message' => 'success',
-            'data'    => $response
+            'data'    => $response,
         ]);
     }
 
@@ -81,15 +82,17 @@ class AlbumController extends Controller
      * Adds already existing songs to album.
      *
      * @param $id
+     *
      * @return JsonResponse
      */
     public function addSong($id): JsonResponse
     {
         $musicId = $this->request->get('musicId');
         $response = $this->albumDomain->addSong($id, $musicId);
+
         return response()->json([
             'message' => 'success',
-            'data'    => $response
+            'data'    => $response,
         ]);
     }
 
@@ -97,15 +100,16 @@ class AlbumController extends Controller
      * Deletes album.
      *
      * @param int $id
+     *
      * @return JsonResponse
      */
     public function deleteAlbum(int $id): JsonResponse
     {
         $this->albumDomain->deleteAlbum($id);
+
         return response()->json([
             'message' => 'success',
-            'data'    => 'Album deleted successfully.'
+            'data'    => 'Album deleted successfully.',
         ]);
-
     }
 }

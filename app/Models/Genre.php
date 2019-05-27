@@ -19,5 +19,4 @@ class Genre extends Model
     {
         return $this->hasMany(Music::class, 'genreId');
     }
-
 }

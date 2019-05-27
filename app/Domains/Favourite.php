@@ -1,19 +1,20 @@
 <?php
 
-
 namespace App\Domains;
 
 use App\Favourite as FavouriteModel;
 use Exception;
-use Illuminate\Database\QueryException;
 
 class Favourite
 {
     /**
-     * Retrieve all favourite songs
+     * Retrieve all favourite songs.
+     *
      * @param int $userId
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     public function getFavourites(int $userId): array
     {

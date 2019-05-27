@@ -26,11 +26,13 @@ if (!function_exists('generate_pdf')) {
      * @param $name
      * @param $data
      * @param $downloadName
+     *
      * @return Response
      */
     function generate_pdf(string $name, $data, string $downloadName)
     {
         $pdf = PDF::loadFile($name, $data);
+
         return $pdf->download($downloadName);
     }
 }

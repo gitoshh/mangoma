@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-
 use Symfony\Component\HttpFoundation\Response;
 
 class NotFoundException extends GeneralException

@@ -11,6 +11,7 @@ class Album
      * Fetch all albums.
      *
      * @param array|null $searchParams
+     *
      * @return array
      */
     public function getAllAlbums(?array $searchParams = null): array
@@ -28,23 +29,24 @@ class Album
         $response = [];
 
         foreach ($albums as $item) {
-            $response[] =  [
+            $response[] = [
                 'name'        => $item->name,
                 'artistes'    => $item->artistes,
                 'releaseDate' => $item->releaseDate,
-                'songs' => $item->music()->get()->toArray(),
+                'songs'       => $item->music()->get()->toArray(),
             ];
         }
 
         return $response;
-
     }
+
     /**
      * Creates new album.
      *
      * @param string $title
      * @param string $releaseDate
      * @param string $artistes
+     *
      * @return array
      */
     public function newAlbum(
@@ -66,15 +68,16 @@ class Album
     /**
      * Updates album details.
      *
-     * @param int $id
+     * @param int         $id
      * @param string|null $title
      * @param string|null $releaseDate
-     * @param array|null $artistes
+     * @param array|null  $artistes
+     *
      * @return array
      */
     public function updateAlbum(
         int $id,
-        string $title =  null,
+        string $title = null,
         string $releaseDate = null,
         array $artistes = null
     ): array {

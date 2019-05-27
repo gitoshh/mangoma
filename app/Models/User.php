@@ -28,12 +28,12 @@ class User extends Model implements AuthenticatableContract
      * @var array
      */
     protected $hidden = [
-        'password', 'token'
+        'password', 'token',
     ];
 
     protected $dates = [
         'trial_ends_at',
-        'subscription_ends_at'
+        'subscription_ends_at',
     ];
 
     /**

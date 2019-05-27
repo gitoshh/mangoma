@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Domains;
+
 use App\Comment as CommentModel;
 use App\Exceptions\NotFoundException;
 
@@ -10,9 +11,10 @@ class Comment
      * create a new comment.
      *
      * @param string $comment
-     * @param int $rating
-     * @param int $userId
-     * @param int $musicId
+     * @param int    $rating
+     * @param int    $userId
+     * @param int    $musicId
+     *
      * @return array
      */
     public function newComment(
@@ -38,6 +40,7 @@ class Comment
      * Remove comment.
      *
      * @param int $commentId
+     *
      * @throws NotFoundException
      */
     public function removeComment(int $commentId): void

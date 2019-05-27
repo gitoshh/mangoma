@@ -10,7 +10,7 @@ class Album extends Model
     protected $table = 'album';
 
     protected $fillable = [
-        'title','releaseDate', 'artistes',
+        'title', 'releaseDate', 'artistes',
     ];
 
     public static $rules = [

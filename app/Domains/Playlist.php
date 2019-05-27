@@ -4,9 +4,8 @@ namespace App\Domains;
 
 use App\Exceptions\NotFoundException;
 use App\Playlist as PlaylistModel;
-use Exception;
 use App\User as UserModel;
-
+use Exception;
 
 class Playlist
 {
@@ -14,7 +13,8 @@ class Playlist
      * Adds a new playlist.
      *
      * @param string $title
-     * @param int $creatorId
+     * @param int    $creatorId
+     *
      * @return array
      */
     public function newPlaylist(string $title, int $creatorId): array
@@ -22,9 +22,11 @@ class Playlist
         $playlist = new PlaylistModel();
         $playlist->title = $title;
         $playlist->creator = $creatorId;
-       if ($playlist->save()) {
-           return $playlist->toArray();
-       }
+
+        if ($playlist->save()) {
+            return $playlist->toArray();
+        }
+
         return [];
     }
 
@@ -32,6 +34,7 @@ class Playlist
      * Removes playlist given id.
      *
      * @param int $id
+     *
      * @throws Exception
      */
     public function deletePlaylist(int $id): void
@@ -47,6 +50,7 @@ class Playlist
      * Retrieve  playlists.
      *
      * @param string|null $searchParams
+     *
      * @return array
      */
     public function fetchPlaylists(?string $searchParams = null): array
@@ -60,7 +64,7 @@ class Playlist
         $response = [];
 
         foreach ($playlists as $item) {
-            $response [] = [
+            $response[] = [
                 'id'      => $item->id,
                 'name'    => $item->title,
                 'creator' => $item->creator,
@@ -76,6 +80,7 @@ class Playlist
      *
      * @param int $playlistId
      * @param int $songId
+     *
      * @throws Exception
      */
     public function attachSong(int $playlistId, int $songId): void
@@ -89,9 +94,11 @@ class Playlist
     }
 
     /**
-     * Add relationship between user and playlist
+     * Add relationship between user and playlist.
+     *
      * @param int $userId
      * @param int $playlistId
+     *
      * @throws Exception
      */
     public function attachUser(int $userId, int $playlistId): void

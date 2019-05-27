@@ -9,8 +9,8 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Support\Facades\Auth as AuthManager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as AuthManager;
 
 class Authenticate
 {
@@ -21,12 +21,10 @@ class Authenticate
      */
     protected $auth;
 
-
     /**
      * Create a new middleware instance.
      *
      * @param Auth $auth
-     *
      */
     public function __construct(Auth $auth)
     {
@@ -49,7 +47,7 @@ class Authenticate
 
             if ($token === null || $token === '') {
                 return response()->json([
-                    'message' => 'Unauthorized.'
+                    'message' => 'Unauthorized.',
                 ], 401);
             }
 
@@ -57,11 +55,11 @@ class Authenticate
                 $decoded = JWT::decode($token, getenv('JWT_TOKEN'), ['HS256']);
             } catch (ExpiredException $e) {
                 return response()->json([
-                    'message' => 'Expired Token.'
+                    'message' => 'Expired Token.',
                 ], 401);
             } catch (SignatureInvalidException $e) {
                 return response()->json([
-                    'message' => 'Invalid Token.'
+                    'message' => 'Invalid Token.',
                 ], 401);
             }
 
@@ -78,7 +76,7 @@ class Authenticate
             }
 
             return response()->json([
-                'message' => 'Unauthorized.'
+                'message' => 'Unauthorized.',
             ], 401);
         }
     }

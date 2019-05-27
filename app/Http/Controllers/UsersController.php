@@ -28,6 +28,7 @@ class UsersController extends Controller
 
     /**
      * Adds a new user.
+     *
      * @throws ValidationException
      */
     public function new()

@@ -85,9 +85,9 @@ $router->group([
 });
 
 $router->group([
-    'middleware' => ['auth',],
-    'prefix'     => 'stripe'
-], static function() use ($router) {
+    'middleware' => ['auth'],
+    'prefix'     => 'stripe',
+], static function () use ($router) {
     $router->post('/token', 'PaymentController@createToken');
     $router->post('/subscribe', 'PaymentController@newSubscription');
     $router->post('/cancel', 'PaymentController@cancelSubscription');

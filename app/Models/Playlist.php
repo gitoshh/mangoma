@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +15,7 @@ class Playlist extends Model
     ];
 
     public static $rules = [
-        'title' => 'required|string'
+        'title' => 'required|string',
     ];
 
     /**

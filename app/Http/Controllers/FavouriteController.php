@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-
 use App\Domains\Favourite as FavouriteDomain;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +17,8 @@ class FavouriteController extends Controller
 
     /**
      * FavouriteController constructor.
-     * @param Request $request
+     *
+     * @param Request         $request
      * @param FavouriteDomain $favouriteDomain
      */
     public function __construct(Request $request, FavouriteDomain $favouriteDomain)
@@ -28,6 +28,10 @@ class FavouriteController extends Controller
     }
 
     /**
+     * Fetch favourite songs.
+     *
+     * @throws Exception
+     *
      * @return JsonResponse
      */
     public function getFavouriteSongs(): JsonResponse
@@ -41,5 +45,4 @@ class FavouriteController extends Controller
             'data'    => $response,
         ]);
     }
-
 }

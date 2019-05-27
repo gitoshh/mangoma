@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddLaravelCashierTables extends Migration
 {
@@ -41,6 +40,6 @@ class AddLaravelCashierTables extends Migration
      */
     public function down(): void
     {
-       Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('subscriptions');
     }
 }

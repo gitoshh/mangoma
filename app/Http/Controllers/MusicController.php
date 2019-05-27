@@ -8,6 +8,7 @@ use App\Domains\Music as MusicDomain;
 use App\Domains\Playlist as PlaylistDomain;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
+use App\Http\Transformers\MusicTransformer;
 use App\Music as MusicModel;
 use App\User;
 use Exception;
@@ -17,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use App\Http\Transformers\MusicTransformer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MusicController extends Controller
@@ -45,11 +45,11 @@ class MusicController extends Controller
     /**
      * MusicController constructor.
      *
-     * @param Request $request
-     * @param MusicDomain $musicDomain
+     * @param Request          $request
+     * @param MusicDomain      $musicDomain
      * @param MusicTransformer $musicTransformer
-     * @param CommentDomain $commentDomain
-     * @param PlaylistDomain $playlistDomain
+     * @param CommentDomain    $commentDomain
+     * @param PlaylistDomain   $playlistDomain
      */
     public function __construct(
         Request $request,
@@ -69,6 +69,7 @@ class MusicController extends Controller
      * Creates new music and stores it in audio file.
      *
      * @throws ValidationException
+     *
      * @return JsonResponse
      */
     public function addNewSong(): JsonResponse
@@ -117,7 +118,9 @@ class MusicController extends Controller
      * Updates a song's details.
      *
      * @param $id
+     *
      * @throws Exception
+     *
      * @return JsonResponse
      */
     public function updateSong($id): JsonResponse
@@ -177,7 +180,9 @@ class MusicController extends Controller
      * Deletes a song given the song id.
      *
      * @param $id
+     *
      * @throws Exception
+     *
      * @return JsonResponse
      */
     public function deleteSong(int $id): JsonResponse
@@ -199,17 +204,20 @@ class MusicController extends Controller
      * Add recommended song to the user's list.
      *
      * @param int $id
-     * @return JsonResponse
+     *
      * @throws BadRequestException
      * @throws NotFoundException
+     *
+     * @return JsonResponse
      */
     public function recommendSong(int $id): JsonResponse
     {
         $userId = $this->get('userId');
         $recommendedBy = Auth::user()->getAuthIdentifier();
         $this->musicDomain->attachMusic($id, $userId, $recommendedBy);
+
         return response()->json([
-              'message' => 'success'
+              'message' => 'success',
           ]);
     }
 
@@ -222,39 +230,41 @@ class MusicController extends Controller
     {
         $recommendedSongs = Auth::user()->recommend()->get()->toArray()[0];
         $response = [
-            'id' => $recommendedSongs['id'],
-            'title' => $recommendedSongs['id'],
-            'originalName' => $recommendedSongs['id'],
-            'extension' => $recommendedSongs['id'],
-            'location' => $recommendedSongs['id'],
-            'uniqueName' => $recommendedSongs['id'],
-            'artistes' => $recommendedSongs['id'],
-            'album_id' => $recommendedSongs['id'],
-            'genreId' => $recommendedSongs['id'],
-            'created_at' => $recommendedSongs['id'],
-            'updated_at' => $recommendedSongs['id'],
-            'recommendedBy' => User::find($recommendedSongs['pivot']['recommended_by'])->toArray()
+            'id'            => $recommendedSongs['id'],
+            'title'         => $recommendedSongs['id'],
+            'originalName'  => $recommendedSongs['id'],
+            'extension'     => $recommendedSongs['id'],
+            'location'      => $recommendedSongs['id'],
+            'uniqueName'    => $recommendedSongs['id'],
+            'artistes'      => $recommendedSongs['id'],
+            'album_id'      => $recommendedSongs['id'],
+            'genreId'       => $recommendedSongs['id'],
+            'created_at'    => $recommendedSongs['id'],
+            'updated_at'    => $recommendedSongs['id'],
+            'recommendedBy' => User::find($recommendedSongs['pivot']['recommended_by'])->toArray(),
             ];
+
         return response()->json([
             'message' => 'success',
             'data'    => $response,
         ]);
-
     }
 
     /**
      * Adds a new comment and|or rating.
      *
      * @param $id
+     *
      * @throws BadRequestException
      * @throws ValidationException
+     *
      * @return JsonResponse
      */
     public function addComment($id): JsonResponse
     {
         $this->validate($this->request, Comment::$rules);
         if (empty($this->request->input())) {
-           throw new BadRequestException('No ratings or comment provided');
+            throw new BadRequestException('No ratings or comment provided');
         }
         $userId = Auth::user()->getAuthIdentifier();
         $response = $this->commentDomain->newComment($userId, $id, $this->get('comment'), $this->get('rating'));
@@ -262,11 +272,12 @@ class MusicController extends Controller
         if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
-                'data'    => $response
+                'data'    => $response,
             ]);
         }
+
         return response()->json([
-            'message' => 'error'
+            'message' => 'error',
         ], 500);
     }
 
@@ -275,15 +286,17 @@ class MusicController extends Controller
      *
      * @param $id
      * @param $commentId
-     * @return JsonResponse
+     *
      * @throws NotFoundException
+     *
+     * @return JsonResponse
      */
     public function deleteComment($id, $commentId): JsonResponse
     {
         $this->commentDomain->removeComment($commentId);
 
         return response()->json([
-            'message' => 'success'
+            'message' => 'success',
         ]);
     }
 
@@ -299,7 +312,7 @@ class MusicController extends Controller
 
         return response()->json([
             'message' => 'success',
-            'data'    => $response
+            'data'    => $response,
         ]);
     }
 
@@ -307,8 +320,10 @@ class MusicController extends Controller
      * Add song to favourite category.
      *
      * @param int $id
-     * @return JsonResponse
+     *
      * @throws Exception
+     *
+     * @return JsonResponse
      */
     public function addFavourite(int $id): JsonResponse
     {
@@ -319,7 +334,7 @@ class MusicController extends Controller
 
         return response()->json([
             'message' => 'success',
-            'data'    => $response
+            'data'    => $response,
         ]);
     }
 
@@ -328,8 +343,9 @@ class MusicController extends Controller
      *
      * @param int $id
      *
-     * @return JsonResponse
      * @throws Exception
+     *
+     * @return JsonResponse
      */
     public function addToPlaylist(int $id): JsonResponse
     {
@@ -337,17 +353,18 @@ class MusicController extends Controller
         $this->playlistDomain->attachSong($playlistId, $id);
 
         return response()->json([
-            'message'=> 'success'
+            'message'=> 'success',
         ]);
-
     }
 
     /**
      * Downloads a file.
      *
      * @param $id
-     * @return BinaryFileResponse
+     *
      * @throws FileNotFoundException
+     *
+     * @return BinaryFileResponse
      */
     public function downloadSong($id): BinaryFileResponse
     {
@@ -357,11 +374,10 @@ class MusicController extends Controller
         $file = $disk->get('audio/'.$response['uniqueName']);
         file_put_contents('tempFile', $file);
 
-        $headers = array(
+        $headers = [
             'Content-Type: application/'.$response['extension'],
-        );
+        ];
 
         return response()->download('tempFile', $response['originalName'], $headers);
-
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Filesystem\FilesystemServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Filesystem\FilesystemServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

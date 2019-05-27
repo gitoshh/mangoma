@@ -25,5 +25,4 @@ class MusicTableSeeder extends Seeder
             'uniqueName'   => uniqid('audio_', true),
         ]);
     }
-
 }

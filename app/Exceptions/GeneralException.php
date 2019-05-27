@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Exceptions;
-
 
 namespace App\Exceptions;
 
@@ -17,15 +15,22 @@ class GeneralException extends Exception implements GeneralExceptionInterface
     protected $httpErrorCode = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     /**
-     * Service Exception Constructor
-     * @param string $message Description of the error
-     * @param string $errorCode 6 character error code
-     * @param boolean $reports Reporting flag
-     * @param array $params Array of params to log. Only used if reports set to true
-     * @param integer $code Exception Code
-     * @param Exception|null $previous Previous Exception
+     * Service Exception Constructor.
+     *
+     * @param string         $message   Description of the error
+     * @param string         $errorCode 6 character error code
+     * @param bool           $reports   Reporting flag
+     * @param array          $params    Array of params to log. Only used if reports set to true
+     * @param int            $code      Exception Code
+     * @param Exception|null $previous  Previous Exception
      */
-    public function __construct($message = null, $errorCode = null, $reports = false, $params = array(), $code = 0, Exception $previous = null)
+    public function __construct(
+        $message = null,
+        $errorCode = null,
+        $reports = false,
+        $params = [],
+        $code = 0,
+        Exception $previous = null)
     {
         $this->params = $params;
         $this->reports = $reports;
