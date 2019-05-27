@@ -9,6 +9,7 @@ use App\Music as MusicModel;
 use App\User as UserModel;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 
 class Music
 {
@@ -46,7 +47,7 @@ class Music
             'genreId'      => $genreId
         ]);
         if ($albumId) {
-            $newMusic->albumId = $albumId;
+            $newMusic->album_id = $albumId;
             $newMusic->save();
         }
 
@@ -152,14 +153,20 @@ class Music
     public function getSongs(?array $filters = null): array
     {
         $songs = MusicModel::select([
+            'id',
             'title',
             'location',
             'extension',
+            'originalName',
+            'uniqueName',
             'artistes'
         ]);
         if ($filters) {
             foreach ($filters as $key => $value) {
                 switch ($key) {
+                    case 'id':
+                        $songs->where('id', $value);
+                        break;
                     case 'albumId':
                         $songs->where('album_id', $value);
                         break;
@@ -180,7 +187,22 @@ class Music
                 }
             }
         }
-        return $songs->get()->toArray();
+        $response = [];
+
+        foreach ($songs->get() as $item){
+            $response[] = [
+                'id'           => $item->id,
+                'title'        => $item->title,
+                'location'     => $item->location,
+                'extension'    => $item->extension,
+                'originalName' => $item->originalName,
+                'uniqueName'   => $item->uniqueName,
+                'artistes'     => $item->artistes,
+                'comments'     => $item->comment()->get(['id', 'comment', 'rating', 'userId'])->toArray()
+            ];
+
+        }
+        return $response;
     }
 
     /**
@@ -204,4 +226,5 @@ class Music
             throw new Exception('Song already exists');
         }
     }
+
 }

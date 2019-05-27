@@ -2,6 +2,7 @@
 
 namespace App\Domains;
 
+use App\Exceptions\NotFoundException;
 use App\Playlist as PlaylistModel;
 use Exception;
 use App\User as UserModel;
@@ -60,9 +61,10 @@ class Playlist
 
         foreach ($playlists as $item) {
             $response [] = [
-                'name' => $item->name,
+                'id'      => $item->id,
+                'name'    => $item->title,
                 'creator' => $item->creator,
-                'music' => $item->music()->get()->toArray(),
+                'music'   => $item->music()->get()->toArray(),
             ];
         }
 
@@ -81,8 +83,9 @@ class Playlist
         $playlist = PlaylistModel::find($playlistId);
         if ($playlist) {
             $playlist->music()->attach($songId);
+        } else {
+            throw new NotFoundException('Playlist not found');
         }
-        throw new Exception('Playlist not found');
     }
 
     /**
@@ -96,7 +99,8 @@ class Playlist
         $user = UserModel::find($userId);
         if ($user) {
             $user->playlist()->attach($playlistId);
+        } else {
+            throw new NotFoundException('User not found');
         }
-        throw new Exception('User not found');
     }
 }

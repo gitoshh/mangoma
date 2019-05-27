@@ -28,7 +28,7 @@ class User extends Model implements AuthenticatableContract
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'token'
     ];
 
     protected $dates = [
@@ -70,6 +70,6 @@ class User extends Model implements AuthenticatableContract
      */
     public function recommend(): BelongsToMany
     {
-        return $this->belongsToMany('Recommend');
+        return $this->belongsToMany(Music::class)->withPivot('recommended_by');
     }
 }

@@ -28,6 +28,34 @@ class AlbumController extends Controller
     }
 
     /**
+     * Retrieve albums.
+     *
+     * @return JsonResponse
+     */
+    public function fetchAlbums(): JsonResponse
+    {
+        $searchParams = [];
+        if($this->get('title')){
+            $searchParams['title'] = $this->get('title');
+        }
+
+        if($this->get('artistes')){
+            $searchParams['artistes'] = $this->get('artistes');
+        }
+
+        if($this->get('releaseDate')){
+            $searchParams['releaseDate'] = $this->get('releaseDate');
+        }
+
+        $response =  $this->albumDomain->getAllAlbums($searchParams);
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response,
+        ]);
+    }
+
+    /**
      * Add new album.
      *
      * @return JsonResponse
@@ -47,10 +75,6 @@ class AlbumController extends Controller
             'message' => 'success',
             'data'    => $response
         ]);
-    }
-
-    public function updateAlbum()
-    {
     }
 
     /**

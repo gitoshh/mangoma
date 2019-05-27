@@ -29,6 +29,7 @@ $router->group([
     'prefix'     => 'album',
 ], static function () use ($router) {
     $router->post('/', 'AlbumController@createNewAlbum');
+    $router->get('/', 'AlbumController@fetchAlbums');
     $router->post('/{id}/song', 'AlbumController@addSong');
     $router->put('/{id}', 'AlbumController@updateAlbum');
     $router->delete('/{id}', 'AlbumController@deleteAlbum');
@@ -48,14 +49,17 @@ $router->group([
     'prefix'     => 'music',
 ], static function () use ($router) {
     $router->post('/{id}/recommend', 'MusicController@recommendSong');
+    $router->get('/recommended', 'MusicController@fetchRecommendedSongs');
     $router->post('/{id}/comment', 'MusicController@addComment');
+    $router->delete('/{id}/comment/{commentId}', 'MusicController@deleteComment');
     $router->post('/{id}/favourite', 'MusicController@addFavourite');
     $router->post('/{id}/playlist', 'MusicController@addToPlaylist');
     $router->get('/', 'MusicController@getSongs');
+    $router->get('/{id}/download', 'MusicController@downloadSong');
 });
 
 $router->group([
-    'middleware' => ['auth', 'role:Normal|Admin|Artiste'],
+    'middleware' => ['auth', 'role:Premium|Admin|Artiste'],
     'prefix'     => 'playlist',
 ], static function () use ($router) {
     $router->post('/', 'PlaylistController@create');
@@ -70,10 +74,11 @@ $router->group([
 ], static function () use ($router) {
     $router->post('/', 'GenreController@addNewGenre');
     $router->get('/', 'GenreController@getGenre');
+    $router->delete('/{id}', 'GenreController@deleteGenre');
 });
 
 $router->group([
-    'middleware' => ['auth', 'role:Admin|Artiste|Normal'],
+    'middleware' => ['auth', 'role:Admin|Artiste|Premium'],
     'prefix'     => 'favourite',
 ], static function () use ($router) {
     $router->get('/', 'FavouriteController@getFavouriteSongs');
@@ -84,7 +89,8 @@ $router->group([
     'prefix'     => 'stripe'
 ], static function() use ($router) {
     $router->post('/token', 'PaymentController@createToken');
-    $router->post('/subscription', 'PaymentController@newSubscription');
+    $router->post('/subscribe', 'PaymentController@newSubscription');
+    $router->post('/cancel', 'PaymentController@cancelSubscription');
     $router->get('/invoices', 'PaymentController@viewInvoices');
     $router->get('/invoices/{id}', 'PaymentController@downloadInvoice');
 });

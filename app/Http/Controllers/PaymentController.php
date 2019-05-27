@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Entrust as EntrustDomain;
 use App\Exceptions\BadRequestException;
+use App\Role;
+use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,9 +18,15 @@ class PaymentController extends Controller
     public const STRIPE_VENDOR = 'Mangoma';
     public const STRIPE_PRODUCT = 'Mangoma premium account';
 
-    public function __construct(Request $request)
+    /**
+     * @var EntrustDomain
+     */
+    private $entrustDomain;
+
+    public function __construct(Request $request, EntrustDomain $entrustDomain)
     {
         parent::__construct($request);
+        $this->entrustDomain = $entrustDomain;
     }
 
     /**
@@ -69,19 +78,35 @@ class PaymentController extends Controller
             'email' => Auth::user()->email,
         ]);
 
+        if (Auth::user()->subscribed('Mangoma premium account')) {
+            $roleId = null;
+            $role = Role::where('name', 'Premium')->first();
+            if(!empty($role)) {
+                $roleId = $role['id'];
+            } else {
+                $response = $this->entrustDomain->newRole('Premium', 'premium');
+                $roleId = $response['id'];
+            }
+            Auth::user()->attachRole($roleId);
+        }
+
         return response()->json([
             'message' => 'success',
-            'data'    => $response->toArray(),
+            'data'    => $response,
         ]);
     }
 
+    /**
+     * Cancel user subscription
+     */
     public function cancelSubscription()
     {
+        $response = Auth::user()->subscription('Mangoma premium account')->cancel();
 
-    }
-
-    public function switchSubscription()
-    {
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response,
+        ]);
 
     }
 

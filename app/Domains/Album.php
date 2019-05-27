@@ -8,6 +8,38 @@ use Carbon\Carbon;
 class Album
 {
     /**
+     * Fetch all albums.
+     *
+     * @param array|null $searchParams
+     * @return array
+     */
+    public function getAllAlbums(?array $searchParams = null): array
+    {
+        if ($searchParams) {
+            $albums = AlbumModel::select('*');
+            foreach ($searchParams as $key => $value) {
+                $albums = $albums->where($key, 'LIKE', '%'.$value.'%');
+            }
+            $albums = $albums->get();
+        } else {
+            $albums = AlbumModel::all();
+        }
+
+        $response = [];
+
+        foreach ($albums as $item) {
+            $response[] =  [
+                'name'        => $item->name,
+                'artistes'    => $item->artistes,
+                'releaseDate' => $item->releaseDate,
+                'songs' => $item->music()->get()->toArray(),
+            ];
+        }
+
+        return $response;
+
+    }
+    /**
      * Creates new album.
      *
      * @param string $title

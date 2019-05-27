@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Role;
 use App\User as UserModel;
 use Closure;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Support\Facades\Auth as AuthManager;
 use Illuminate\Http\Request;
 
 class Authenticate
@@ -19,12 +21,12 @@ class Authenticate
      */
     protected $auth;
 
+
     /**
      * Create a new middleware instance.
      *
      * @param Auth $auth
      *
-     * @return void
      */
     public function __construct(Auth $auth)
     {
@@ -45,7 +47,7 @@ class Authenticate
         if ($this->auth->guard($guard)->guest()) {
             $token = $request->header('token');
 
-            if ($token === null) {
+            if ($token === null || $token === '') {
                 return response()->json([
                     'message' => 'Unauthorized.'
                 ], 401);
@@ -64,10 +66,13 @@ class Authenticate
             }
 
             $user = UserModel::find($decoded->sub);
-            $storedToken = $user->first('token')->toArray()['token'];
 
-            if (!empty($user->first()) && $storedToken === $token) {
-                \Illuminate\Support\Facades\Auth::setUser($user);
+            if ($user->token === $token && !empty($user->get())) {
+                if (!$user->subscribed('Mangoma premium account')) {
+                    $role = Role::where('name', 'Premium')->first();
+                    $user->detachRole($role['id']);
+                }
+                AuthManager::setUser($user);
 
                 return $next($request);
             }

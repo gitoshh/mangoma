@@ -2,6 +2,7 @@
 
 namespace App\Domains;
 use App\Comment as CommentModel;
+use App\Exceptions\NotFoundException;
 
 class Comment
 {
@@ -33,4 +34,18 @@ class Comment
         return [];
     }
 
+    /**
+     * Remove comment.
+     *
+     * @param int $commentId
+     * @throws NotFoundException
+     */
+    public function removeComment(int $commentId): void
+    {
+        $comment = CommentModel::find($commentId);
+        if (empty($comment)) {
+            throw new NotFoundException('comment not found');
+        }
+        $comment->delete();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domains;
 
+use App\Exceptions\NotFoundException;
 use App\Genre as GenreModel;
 
 class Genre
@@ -44,6 +45,20 @@ class Genre
         }
 
         return $response;
+    }
 
+    /**
+     * Remove genre by id.
+     *
+     * @param int $id
+     * @throws NotFoundException
+     */
+    public function deleteGenre(int $id): void
+    {
+        $genre = GenreModel::find($id);
+        if (empty($genre)) {
+            throw new NotFoundException('Genre not found!', 'SCHNCF');
+        }
+        $genre->delete();
     }
 }

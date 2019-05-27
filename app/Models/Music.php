@@ -72,6 +72,6 @@ class Music extends Model
      */
     public function comment(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'musicId');
     }
 }

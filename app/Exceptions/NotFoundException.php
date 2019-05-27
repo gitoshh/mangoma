@@ -2,27 +2,10 @@
 
 namespace App\Exceptions;
 
-use Exception;
-use Illuminate\Http\JsonResponse;
 
-class NotFoundException extends Exception
+use Symfony\Component\HttpFoundation\Response;
+
+class NotFoundException extends GeneralException
 {
-    /**
-     * Report the exception.
-     *
-     * @return void
-     */
-    public function report()
-    {
-        //
-    }
-
-    /**
-     * @param string $msg
-     * @return JsonResponse
-     */
-    public function render(string $msg)
-    {
-        return response()->json($msg, 404);
-    }
+    protected $httpErrorCode = Response::HTTP_NOT_FOUND;
 }

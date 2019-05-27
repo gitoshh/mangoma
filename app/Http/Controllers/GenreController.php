@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Genre as GenreDomain;
+use App\Exceptions\NotFoundException;
 use App\Genre;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -59,6 +60,21 @@ class GenreController extends Controller
         return response()->json([
             'message' => 'success',
             'data'    => $response,
+        ]);
+    }
+
+    /**
+     * Removes a genre by id.
+     *
+     * @param $id
+     * @return JsonResponse
+     * @throws NotFoundException
+     */
+    public function deleteGenre($id): JsonResponse
+    {
+        $this->genreDomain->deleteGenre($id);
+        return response()->json([
+            'message' => 'success'
         ]);
     }
 }

@@ -2,28 +2,9 @@
 
 namespace App\Exceptions;
 
-use Exception;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class BadRequestException extends Exception
+class BadRequestException extends GeneralException
 {
-
-    /**
-     * Report the exception.
-     *
-     * @return void
-     */
-    public function report()
-    {
-        //
-    }
-
-    /**
-     * @param string $msg
-     * @return JsonResponse
-     */
-    public function render(string $msg)
-    {
-        return response()->json($msg, 400);
-    }
+    protected $httpErrorCode = Response::HTTP_BAD_REQUEST;
 }
