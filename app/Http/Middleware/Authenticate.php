@@ -66,7 +66,7 @@ class Authenticate
             $user = UserModel::find($decoded->sub);
 
             if ($user->token === $token && !empty($user->get())) {
-                if (!$user->subscribed('Mangoma premium account')) {
+                if (!$user->subscribed('Mangoma premium account') && !empty($user->roles()->first()) && ($user->roles()->first()['name'] === 'Premium')) {
                     $role = Role::where('name', 'Premium')->first();
                     $user->detachRole($role['id']);
                 }

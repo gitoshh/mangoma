@@ -29,7 +29,7 @@ class EntrustControllerTest extends BaseTest
         $this->token = json_decode($this->response->getContent(), true)['token'];
     }
 
-    public function testCreateAdminRoleSuccessfully(): void
+    public function testCreateTestRoleSuccessfully(): void
     {
         $role = [
             'name'         => 'Test',

@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\UploadedFile;
-
 class MusicControllerTest extends BaseTest
 {
     /**
@@ -18,23 +16,6 @@ class MusicControllerTest extends BaseTest
             'password' => 'A123123@',
         ]);
         $this->token = json_decode($this->response->getContent(), true)['token'];
-    }
-
-    public function testArtisteCanAddMusicSuccessfully(): void
-    {
-        $payload = [
-            'title'    => 'Another new song',
-            'artistes' => 'Sean, Jhene',
-            'genreId'  => 1,
-        ];
-        $song = [
-            'song'  => UploadedFile::fake()->create('music.mp3', 1300),
-        ];
-
-        $this->headers['token'] = $this->token;
-        $this->headers['Content-Type'] = 'multipart/form-data';
-        $this->call('POST', '/music', $payload, [], $song, $this->transformHeadersToServerVars($this->headers));
-        $this->assertResponseOk();
     }
 
     public function testArtisteCanUpdateSongDetails(): void
