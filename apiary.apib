@@ -195,64 +195,171 @@ You may assign a role pemissions using this action. It takes a header `token` st
         }
         
         
-## Albums [/album]
 
-### create a new album  [POST]
+## Genre [/genre]
 
-You may create new albums using this action. It takes a header `token` string, a JSON object containing the name of the album, artistes names and the album's release date.
+### Add new genre  [POST]
+
+You may add new music genre using this action. It takes a header `token` string, a JSON object containing the genre name.
 
 + Request (application/json)
 
     + Headers
-
+    
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+            
 
++ Response 200 (application/json)
+
+        {
+            "message": "success",
+            "data": {
+            "name": "RnB",
+            "updated_at": "2019-05-28 07:40:26",
+            "created_at": "2019-05-28 07:40:26",
+            "id": 1
+        }
+        
+        
+### Fetch genres  [GET]
+
+You retrieve music genre using this action. It takes a header `token` string, a JSON object containing the genre name.
+
++ Request (application/json)
+
+    + Headers
+    
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+            
+
++ Response 200 (application/json)
+
+        {
+            "message": "success",
+            "data": [
+                {
+                    "name": "RnB",
+                    "songs": []
+                }
+            ]
+        }
+        
+
+## Genre [/genre/id]
+
+### delete genre  [DELETE]
+
+You delete genres using this action. It takes a header `token` string.
+
++ Request (application/json)
+
+    + Headers
+    
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+            
+
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+        
+        
+## Album [/album]
+
+### create new album  [POST]
+
+You create new albums using this action. It takes a header `token` string, a JSON object containing album title, artistes and release date.
+
++ Request (application/json)
+
+    + Headers
+    
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+            
 
     + Body
-
+            
             {
-            	"title": "A new album",
-            	"artistes": "jhene, sean",
-            	"releaseDate": "12/01/2017"
+                "title": "Another album",
+                "artistes": "sautisol, Nyashinski",
+                "releaseDate": "04-04-2018"
             }
 
 + Response 200 (application/json)
 
-            {
-                "message": "success",
-                "data": {
-                    "title": "A new album",
-                    "releaseDate": "2017-12-01T00:00:00.000000Z",
-                    "artistes": "jhene, sean",
-                    "updated_at": "2019-05-22 13:51:32",
-                    "created_at": "2019-05-22 13:51:32",
-                    "id": 3
-                }
+        {
+            "message": "success",
+            "data": {
+                "title": "Another album",
+                "releaseDate": "2018-04-04",
+                "artistes": "sautisol, Nyashinski",
+                "updated_at": "2019-05-28 07:58:00",
+                "created_at": "2019-05-28 07:58:00",
+                "id": 1
             }
+        }
+        
 
+### Retrieve albums  [GET]
 
-## Albums [/album/{id}]
-
-### create a new album  [DELETE]
-
-You may Delete existing albums using this action. It takes a header `token` string.
+You fetch albums using this action. It takes a header `token` string.
 
 + Request (application/json)
 
     + Headers
-
+    
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+            
 
 + Response 200 (application/json)
 
+        {
+            "message": "success",
+            "data": [
+                {
+                    "name": null,
+                    "artistes": "sautisol, Nyashinski",
+                    "releaseDate": "2018-04-04",
+                    "songs": []
+                }
+            ]
+        }
+
+## Music [/music]
+
+### Add new music  [POST]
+
+You add new song using this action. It takes a header `token` string and body contain music payload.
+
++ Request (application/json)
+
+    + Headers
+    
+            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRvc2hoXC9tYW5nb21hIiwic3ViIjoxLCJpYXQiOjE1NTgzNTk2NDMsImV4cCI6MTU1ODM2MzI0M30.nqefT1buWV2T8ALNDyrzMNQUBhUWMiMhulpW7xo6xSg"
+
+    + Body
+            
             {
-              "message": "success",
-              "data": "Album deleted successfully."
-            }
+                "title": "Another album",
+                "artistes": "sautisol, Nyashinski",
+                "song": "",
+                "genreId": "",
+                "albumId": "",
+                "releaseDate": "04-04-2018"
+            }    
 
++ Response 200 (application/json)
 
-
-        
-
-        
-        
+        {
+            "message": "success",
+            "data": [
+                {
+                    "name": null,
+                    "artistes": "sautisol, Nyashinski",
+                    "releaseDate": "2018-04-04",
+                    "songs": []
+                }
+            ]
+        }
