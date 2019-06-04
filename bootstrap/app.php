@@ -92,12 +92,10 @@ $app->routeMiddleware([
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
- // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Zizaco\Entrust\EntrustServiceProvider::class);
 $app->register(Laravel\Cashier\CashierServiceProvider::class);
 $app->register(Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
-$app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
 
 $app->withFacades(true,
     [

@@ -24,10 +24,27 @@ class AuthControllerTest extends BaseTest
     public function testUserSignInBadRequestError(): void
     {
         unset($this->payload['email']);
-        $this->payload['email'] = 'another.user@gmail.com';
+        $this->payload['email'] = 'wrong.user@gmail.com';
         $this->post('/auth/login', $this->payload);
         $this->assertResponseStatus(400);
         $this->assertContains('Email does not exist', $this->response->getContent());
+    }
+
+    public function testUserSignInFailureWrongPassword(): void
+    {
+        unset($this->payload['password']);
+        $this->payload['password'] = '123123123';
+        $this->post('/auth/login', $this->payload);
+        $this->assertResponseStatus(400);
+        $this->assertContains('Email or password is wrong', $this->response->getContent());
+    }
+
+    public function testUserSignInFailureValidation(): void
+    {
+        unset($this->payload['email']);
+        $this->post('/auth/login', $this->payload);
+        $this->assertResponseStatus(422);
+        $this->assertContains('The email field is required', $this->response->getContent());
     }
 
     public function testUserUnauthorisedError(): void
@@ -37,5 +54,13 @@ class AuthControllerTest extends BaseTest
         $this->post('/genre', $payload, ['token' => $expiredToken]);
         $this->assertResponseStatus(401);
         $this->assertContains('Expired Token.', $this->response->getContent());
+    }
+
+    public function testUserLogoutSuccessfully(): void
+    {
+        $this->post('/auth/login', $this->payload);
+        $token = json_decode($this->response->getContent(), true)['token'];
+        $this->post('/auth/logout', [], ['token' => $token]);
+        $this->assertResponseOk();
     }
 }

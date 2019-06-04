@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'AlbumTableSeeder',
             'GenreTableSeeder',
             'MusicTableSeeder',
+            'PlaylistTableSeeder',
         ]);
     }
 }

@@ -19,6 +19,12 @@ class Album extends Model
         'artistes'    => 'string',
     ];
 
+    public static $updateRules = [
+        'title'       => 'string',
+        'releaseDate' => 'string',
+        'artistes'    => 'string',
+    ];
+
     /**
      * The products that belong to the shop.
      */

@@ -2,33 +2,6 @@
 
 class EntrustControllerTest extends BaseTest
 {
-    /**
-     * var [].
-     */
-    private $permission;
-
-    /**
-     * @var string
-     */
-    private $token;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->permission = [
-            'name'         => 'add-songs',
-            'display_name' => 'Add song',
-            'description'  => 'Permission to add new songs',
-        ];
-
-        $this->post('/auth/login', [
-            'email'    => 'test.user@gmail.com',
-            'password' => 'A123123@',
-        ]);
-        $this->token = json_decode($this->response->getContent(), true)['token'];
-    }
-
     public function testCreateTestRoleSuccessfully(): void
     {
         $role = [
@@ -37,9 +10,20 @@ class EntrustControllerTest extends BaseTest
             'description'  => 'test role',
         ];
 
-        $this->headers['token'] = $this->token;
         $this->post('/admin/role', $role, $this->headers);
         $this->assertResponseOk();
+    }
+
+    public function testCreateTestRoleFailureValidation(): void
+    {
+        $role = [
+            'display_name' => 'test',
+            'description'  => 'test role',
+        ];
+
+        $this->post('/admin/role', $role, $this->headers);
+        $this->assertResponseStatus(422);
+        $this->assertContains('The name field is required', $this->response->getContent());
     }
 
     public function testAddPermissionSuccessfully(): void
@@ -50,9 +34,20 @@ class EntrustControllerTest extends BaseTest
             'description'  => 'Permission to add new songs',
         ];
 
-        $this->headers['token'] = $this->token;
         $this->post('/admin/permission', $permission, $this->headers);
         $this->assertResponseOk();
+    }
+
+    public function testAddPermissionFailureValidation(): void
+    {
+        $permission = [
+            'display_name' => 'Add song',
+            'description'  => 'Permission to add new songs',
+        ];
+
+        $this->post('/admin/permission', $permission, $this->headers);
+        $this->assertResponseStatus(422);
+        $this->assertContains('The name field is required', $this->response->getContent());
     }
 
     public function testAttachUserRoleSuccessfully(): void
@@ -67,7 +62,6 @@ class EntrustControllerTest extends BaseTest
             'roleId' => 1,
         ];
 
-        $this->headers['token'] = $this->token;
         $this->post('/users', $userCredentials);
         $this->post('/admin/attach/role', $userRolePayload, $this->headers);
         $this->assertResponseOk();
@@ -85,7 +79,6 @@ class EntrustControllerTest extends BaseTest
             'permissions' => [2],
         ];
 
-        $this->headers['token'] = $this->token;
         $this->post('/admin/permission', $permission, $this->headers);
         $this->post('/admin/attach/permission', $rolePermissionPayload, $this->headers);
         $this->assertResponseOk();

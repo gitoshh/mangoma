@@ -13,7 +13,7 @@ class MusicTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $song = UploadedFile::fake()->create('music.mp3', 1300);
+        $song = UploadedFile::fake()->create('music.mp3', 1);
 
         DB::table('music')->insert([
             'title'        => 'new song',
@@ -23,6 +23,21 @@ class MusicTableSeeder extends Seeder
             'originalName' => $song->getClientOriginalName(),
             'extension'    => $song->getClientOriginalExtension(),
             'uniqueName'   => uniqid('audio_', true),
+        ]);
+
+        DB::table('music')->insert([
+            'title'        => 'Another song',
+            'artistes'     => 'Sean, Jhene',
+            'genreId'      => 1,
+            'location'     => $song->getPath(),
+            'originalName' => $song->getClientOriginalName(),
+            'extension'    => $song->getClientOriginalExtension(),
+            'uniqueName'   => uniqid('audio_', true),
+        ]);
+
+        DB::table('favourites')->insert([
+            'user_id'  => 1,
+            'music_id' => 1,
         ]);
     }
 }

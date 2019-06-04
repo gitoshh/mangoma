@@ -3,6 +3,8 @@
 namespace App\Domains;
 
 use App\Album as AlbumModel;
+use App\Exceptions\NotFoundException;
+use App\Music as MusicModel;
 use Carbon\Carbon;
 
 class Album
@@ -66,44 +68,76 @@ class Album
     }
 
     /**
+     * Add an existing song to album.
+     *
+     * @param int $albumId
+     * @param int $songId
+     *
+     * @throws NotFoundException
+     *
+     * @return array
+     */
+    public function addSong(int $albumId, int $songId): array
+    {
+        $song = MusicModel::find($songId);
+        if (empty($song)) {
+            throw new NotFoundException('Song not found');
+        }
+        $song->album_id = $albumId;
+
+        if ($song->update()) {
+            return $song->toArray();
+        }
+    }
+
+    /**
      * Updates album details.
      *
-     * @param int         $id
-     * @param string|null $title
-     * @param string|null $releaseDate
-     * @param array|null  $artistes
+     * @param int   $id
+     * @param array $updateDetails
+     *
+     * @throws NotFoundException
      *
      * @return array
      */
     public function updateAlbum(
         int $id,
-        string $title = null,
-        string $releaseDate = null,
-        array $artistes = null
+        array $updateDetails
     ): array {
         $album = AlbumModel::find($id);
-        if ($title) {
+
+        if (empty($album)) {
+            throw new NotFoundException('Album not found');
+        }
+        if ($title = $updateDetails['title'] ?? null) {
             $album->title = $title;
         }
-        if ($releaseDate) {
-            $album->releaseDate = $releaseDate;
+
+        if ($releaseDate = $updateDetails['releaseDate'] ?? null) {
+            $album->releaseDate = Carbon::parse($releaseDate)->toDateString();
         }
-        if ($artistes) {
+
+        if ($artistes = $updateDetails['artistes'] ?? null) {
             $album->artistes = $artistes;
         }
         $album->update();
 
-        return $album;
+        return $album->toArray();
     }
 
     /**
      * Delete album by id.
      *
      * @param int $id
+     *
+     * @throws NotFoundException
      */
     public function deleteAlbum(int $id): void
     {
         $album = AlbumModel::find($id);
+        if (empty($album)) {
+            throw new NotFoundException('Album not found');
+        }
         $album->delete();
     }
 }
