@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Entrust as EntrustDomain;
-use App\Exceptions\BadRequestException;
 use App\Role;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

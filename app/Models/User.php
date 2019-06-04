@@ -73,7 +73,6 @@ class User extends Model implements AuthenticatableContract
         return $this->belongsToMany(Music::class)->withPivot('recommended_by');
     }
 
-
     /**
      * The music that belong to the music.
      *

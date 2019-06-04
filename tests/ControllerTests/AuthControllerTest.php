@@ -45,7 +45,6 @@ class AuthControllerTest extends BaseTest
         $this->post('/auth/login', $this->payload);
         $this->assertResponseStatus(422);
         $this->assertContains('The email field is required', $this->response->getContent());
-
     }
 
     public function testUserUnauthorisedError(): void

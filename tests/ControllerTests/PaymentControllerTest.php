@@ -26,8 +26,6 @@ class PaymentControllerTest extends BaseTest
 
     public function testCreateTokenSuccessfully(): void
     {
-
-
         $this->post('/stripe/token', $this->payload, $this->headers);
         $this->assertResponseOk();
     }
@@ -64,5 +62,4 @@ class PaymentControllerTest extends BaseTest
         $this->get('/stripe/invoices', [], $this->headers);
         $this->assertResponseOk();
     }
-
 }

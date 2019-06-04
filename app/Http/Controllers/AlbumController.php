@@ -106,7 +106,6 @@ class AlbumController extends Controller
             'message' => 'success',
             'data'    => $response,
         ]);
-
     }
 
     /**

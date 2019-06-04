@@ -16,5 +16,4 @@ class PlaylistTableSeeder extends Seeder
             'creator' => 1,
         ]);
     }
-
 }
