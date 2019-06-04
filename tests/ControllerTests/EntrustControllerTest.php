@@ -38,7 +38,6 @@ class EntrustControllerTest extends BaseTest
         $this->assertResponseOk();
     }
 
-
     public function testAddPermissionFailureValidation(): void
     {
         $permission = [

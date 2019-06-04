@@ -38,7 +38,7 @@ class MusicControllerTest extends BaseTest
         ];
         $this->headers['Content-Type'] = 'multipart/form-data';
         $server = $this->transformHeadersToServerVars($this->headers);
-        $this->call('POST', '/music', $payload, [], ['song' => $song ], $server);
+        $this->call('POST', '/music', $payload, [], ['song' => $song], $server);
         $this->assertResponseOk();
     }
 
@@ -48,7 +48,6 @@ class MusicControllerTest extends BaseTest
         $this->delete('/music/1', [], $this->headers);
         $this->assertResponseOk();
     }
-
 
     public function testDeleteSongFailureNotFound(): void
     {
@@ -86,7 +85,6 @@ class MusicControllerTest extends BaseTest
         $this->post('/music/1/comment', ['comment' => 'yooo'], $this->headers);
         $this->delete('/music/1/comment/1', [], $this->headers);
         $this->assertResponseOk();
-
     }
 
     public function testGetSongsSuccessfully(): void
@@ -120,7 +118,6 @@ class MusicControllerTest extends BaseTest
         $this->mockedRepo->shouldReceive('read')->once()->andReturn($file);
         $this->get('/music/1/download', $this->headers);
         $this->assertResponseOk();
-
     }
 
     public function testArtisteCanUpdateSongDetails(): void
@@ -152,6 +149,5 @@ class MusicControllerTest extends BaseTest
 
         $this->call('PUT', '/music/10', $payload, [], ['song' => $song], $this->transformHeadersToServerVars($this->headers));
         $this->assertContains('Song not found', $this->response->getContent());
-
     }
 }

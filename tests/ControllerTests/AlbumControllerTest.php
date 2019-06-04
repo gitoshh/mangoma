@@ -5,7 +5,7 @@ class AlbumControllerTest extends BaseTest
 {
     public function testFetchAlbumsSuccessfully(): void
     {
-        $params='?title=new%20album&artistes=jhene&releaseDate=12-12-2014';
+        $params = '?title=new%20album&artistes=jhene&releaseDate=12-12-2014';
         $this->get('/album'.$params, $this->headers);
         $this->assertResponseOk();
         $this->assertContains('success', $this->response->getContent());
@@ -62,10 +62,9 @@ class AlbumControllerTest extends BaseTest
         $this->assertContains('Album not found', $this->response->getContent());
     }
 
-
     public function testDeleteAlbumSuccessfully(): void
     {
-        $this->delete('/album/1', [] , $this->headers);
+        $this->delete('/album/1', [], $this->headers);
         $this->assertResponseOk();
     }
 
@@ -74,5 +73,4 @@ class AlbumControllerTest extends BaseTest
         $this->delete('/album/5', [], $this->headers);
         $this->assertContains('Album not found', $this->response->getContent());
     }
-
 }

@@ -33,7 +33,6 @@ abstract class GoogleStorageAdapter extends AbstractAdapter
         ]);
         $this->setPathPrefix(getenv('GOOGLE_CLOUD_STORAGE_PATH_PREFIX'));
         $this->bucket = $this->storageClient->bucket(getenv('GOOGLE_CLOUD_STORAGE_BUCKET'));
-
     }
 
     /**

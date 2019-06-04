@@ -3,7 +3,6 @@
 
 class PlaylistControllerTest extends BaseTest
 {
-
     public function testGetPlaylistsSuccessfully(): void
     {
         $this->get('/playlist', $this->headers);
@@ -13,7 +12,7 @@ class PlaylistControllerTest extends BaseTest
     public function testCreatePlaylistSuccessfully(): void
     {
         $this->post('/playlist', [
-            'title' => 'My first'
+            'title' => 'My first',
         ], $this->headers);
         $this->assertResponseOk();
     }
@@ -47,5 +46,4 @@ class PlaylistControllerTest extends BaseTest
         $this->delete('/playlist/10', [], $this->headers);
         $this->assertContains('Playlist not found', $this->response->getContent());
     }
-
 }

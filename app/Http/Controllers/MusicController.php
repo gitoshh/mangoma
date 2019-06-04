@@ -12,7 +12,6 @@ use App\Music as MusicModel;
 use App\Services\GoogleCloudStorage\GoogleStorageAdapter;
 use App\User;
 use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,10 +44,10 @@ class MusicController extends Controller
     /**
      * MusicController constructor.
      *
-     * @param Request $request
-     * @param MusicDomain $musicDomain
-     * @param CommentDomain $commentDomain
-     * @param PlaylistDomain $playlistDomain
+     * @param Request              $request
+     * @param MusicDomain          $musicDomain
+     * @param CommentDomain        $commentDomain
+     * @param PlaylistDomain       $playlistDomain
      * @param GoogleStorageAdapter $googleStorageAdapter
      */
     public function __construct(
@@ -88,7 +87,7 @@ class MusicController extends Controller
 
         $config->set('name', $uniqueName);
         $response = $this->googleStorageAdapter->write($musicFile->getPath(),
-            file_get_contents($musicFile), $config );
+            file_get_contents($musicFile), $config);
         $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response['path'];
 
         $response = $this->musicDomain->newMusic(
@@ -128,19 +127,19 @@ class MusicController extends Controller
     {
         $payload = [];
         if (!empty($this->request->input('title'))) {
-            $payload ['title'] = $this->request->input('title');
+            $payload['title'] = $this->request->input('title');
         }
 
         if (!empty($this->request->input('artistes'))) {
-            $payload ['artistes'] = $this->request->input('artistes');
+            $payload['artistes'] = $this->request->input('artistes');
         }
 
         if (!empty($this->request->input('albumId'))) {
-            $payload ['album_id'] = $this->request->input('albumId');
+            $payload['album_id'] = $this->request->input('albumId');
         }
 
         if (!empty($this->request->input('genreId'))) {
-            $payload ['genreId'] = $this->request->input('genreId');
+            $payload['genreId'] = $this->request->input('genreId');
         }
 
         if (!empty($this->request->file('song'))) {
@@ -153,7 +152,7 @@ class MusicController extends Controller
             $config->set('name', $previousName);
             $musicFile = $this->request->file('song');
             $response = $this->googleStorageAdapter->write($musicFile->getPath(),
-                file_get_contents($musicFile), $config );
+                file_get_contents($musicFile), $config);
             $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response['path'];
             $originalName = $musicFile->getClientOriginalName();
             $uniqueName = uniqid('audio_', true);
@@ -192,6 +191,7 @@ class MusicController extends Controller
         $path = $path->toArray()['uniqueName'];
         if ($this->musicDomain->removeSong($id)) {
             $this->googleStorageAdapter->delete($path);
+
             return response()->json([
                 'message' => 'Success',
                 'data'    => 'song deleted successfully.',
@@ -245,7 +245,6 @@ class MusicController extends Controller
                 'recommendedBy' => User::find($recommendedSong['pivot']['recommended_by'])->toArray(),
             ];
         }
-
 
         return response()->json([
             'message' => 'success',

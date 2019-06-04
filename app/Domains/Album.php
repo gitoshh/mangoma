@@ -93,7 +93,7 @@ class Album
     /**
      * Updates album details.
      *
-     * @param int $id
+     * @param int   $id
      * @param array $updateDetails
      *
      * @throws NotFoundException
@@ -109,15 +109,15 @@ class Album
         if (empty($album)) {
             throw new NotFoundException('Album not found');
         }
-        if ($title = $updateDetails['title']?? null) {
+        if ($title = $updateDetails['title'] ?? null) {
             $album->title = $title;
         }
 
-        if ($releaseDate = $updateDetails['releaseDate']?? null) {
+        if ($releaseDate = $updateDetails['releaseDate'] ?? null) {
             $album->releaseDate = Carbon::parse($releaseDate)->toDateString();
         }
 
-        if ($artistes = $updateDetails['artistes']?? null) {
+        if ($artistes = $updateDetails['artistes'] ?? null) {
             $album->artistes = $artistes;
         }
         $album->update();
