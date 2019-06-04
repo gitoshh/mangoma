@@ -1,13 +1,12 @@
 <?php
 
-
-use Laravel\Cashier\Billable;
+use Stripe\Token;
 
 class PaymentControllerTest extends BaseTest
 {
     private $payload;
 
-    private $mockedTrait;
+    private $mockedClass;
 
     public function setUp(): void
     {
@@ -19,13 +18,14 @@ class PaymentControllerTest extends BaseTest
             'cvc'       => '123',
         ];
 
-        $this->mockedTrait = Mockery::mock(Billable::class);
-        app()->instance(Billable::class,
-            $this->mockedTrait);
+        $this->mockedClass = Mockery::mock(Token::class);
+        app()->instance(Token::class,
+            $this->mockedClass);
     }
 
     public function testCreateTokenSuccessfully(): void
     {
+        $this->mockedClass->shouldReceive('create')->andReturn(['id' => uniqid('tok_', false)]);
         $this->post('/stripe/token', $this->payload, $this->headers);
         $this->assertResponseOk();
     }
