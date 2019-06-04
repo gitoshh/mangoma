@@ -34,7 +34,10 @@ class Music extends Model
      * @var array
      */
     public static $rules = [
-        'title' => 'required|string',
+        'title'    => 'required|string',
+        'song'     => 'required|file',
+        'artistes' => 'required| string',
+        'genreId'  => 'required',
         ];
 
     /**

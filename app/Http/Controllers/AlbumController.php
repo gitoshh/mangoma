@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Album as AlbumModel;
 use App\Domains\Album;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\NotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -79,15 +81,46 @@ class AlbumController extends Controller
     }
 
     /**
+     * Update an existing album.
+     *
+     * @param int $id
+     *
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws ValidationException
+     *
+     * @return JsonResponse
+     */
+    public function updateAlbum(int $id): JsonResponse
+    {
+        $this->validate($this->request, AlbumModel::$updateRules);
+        $payload = $this->request->input();
+
+        if (empty($payload)) {
+            throw new BadRequestException('No update details provided');
+        }
+
+        $response = $this->albumDomain->updateAlbum($id, $payload);
+
+        return response()->json([
+            'message' => 'success',
+            'data'    => $response,
+        ]);
+
+    }
+
+    /**
      * Adds already existing songs to album.
      *
      * @param $id
+     *
+     * @throws NotFoundException
      *
      * @return JsonResponse
      */
     public function addSong($id): JsonResponse
     {
-        $musicId = $this->request->get('musicId');
+        $musicId = $this->get('musicId');
         $response = $this->albumDomain->addSong($id, $musicId);
 
         return response()->json([
@@ -100,6 +133,8 @@ class AlbumController extends Controller
      * Deletes album.
      *
      * @param int $id
+     *
+     * @throws NotFoundException
      *
      * @return JsonResponse
      */

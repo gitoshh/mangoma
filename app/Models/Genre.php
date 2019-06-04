@@ -12,7 +12,7 @@ class Genre extends Model
     ];
 
     public static $rules = [
-        'name' => 'string|required|unique:genres',
+        'name' => 'required|string|unique:genres',
     ];
 
     public function music(): HasMany

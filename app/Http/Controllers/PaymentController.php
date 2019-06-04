@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Stripe\Stripe;
 use Stripe\Token;
 
@@ -31,22 +32,25 @@ class PaymentController extends Controller
     /**
      * Creates new token from card information.
      *
-     * @throws BadRequestException
+     * @throws ValidationException
      *
      * @return JsonResponse
      */
     public function createToken():JsonResponse
     {
-        try {
-            $payload = $this->request->only([
-                'number',
-                'exp_month',
-                'exp_year',
-                'cvc',
-            ]);
-        } catch (Exception $exception) {
-            throw new BadRequestException('Invalid payload');
-        }
+        $this->validate($this->request, [
+            'number'    => 'required|string',
+            'exp_month' => 'required|string',
+            'exp_year'  => 'required|string',
+            'cvc'       => 'required|string',
+        ]);
+
+        $payload = $this->request->only([
+            'number',
+            'exp_month',
+            'exp_year',
+            'cvc',
+        ]);
 
         Stripe::setApiKey(getenv('STRIPE_KEY'));
 
@@ -73,10 +77,10 @@ class PaymentController extends Controller
     public function newSubscription(): JsonResponse
     {
         $token = $this->get('stripeToken');
-        $response = Auth::user()->newSubscription('Mangoma premium account', 'plan_F6HqCkiweMUWGW')
+        $response = Auth::user()->newSubscription(self::STRIPE_PRODUCT, 'plan_F6HqCkiweMUWGW')
             ->create($token, ['email' => Auth::user()->email]);
 
-        if (Auth::user()->subscribed('Mangoma premium account')) {
+        if (Auth::user()->subscribed(self::STRIPE_PRODUCT)) {
             $roleId = null;
             $role = Role::where('name', 'Premium')->first();
             if (!empty($role)) {
@@ -99,7 +103,7 @@ class PaymentController extends Controller
      */
     public function cancelSubscription()
     {
-        $response = Auth::user()->subscription('Mangoma premium account')->cancel();
+        $response = Auth::user()->subscription(self::STRIPE_PRODUCT)->cancel();
 
         return response()->json([
             'message' => 'success',

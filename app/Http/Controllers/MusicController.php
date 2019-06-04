@@ -8,16 +8,16 @@ use App\Domains\Music as MusicDomain;
 use App\Domains\Playlist as PlaylistDomain;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\NotFoundException;
-use App\Http\Transformers\MusicTransformer;
 use App\Music as MusicModel;
+use App\Services\GoogleCloudStorage\GoogleStorageAdapter;
 use App\User;
 use Exception;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use League\Flysystem\Config;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MusicController extends Controller
@@ -26,11 +26,6 @@ class MusicController extends Controller
      * @var MusicDomain
      */
     private $musicDomain;
-
-    /**
-     * @var MusicTransformer
-     */
-    private $musicTransformer;
 
     /**
      * @var CommentDomain
@@ -43,26 +38,31 @@ class MusicController extends Controller
     private $playlistDomain;
 
     /**
+     * @var GoogleStorageAdapter
+     */
+    private $googleStorageAdapter;
+
+    /**
      * MusicController constructor.
      *
-     * @param Request          $request
-     * @param MusicDomain      $musicDomain
-     * @param MusicTransformer $musicTransformer
-     * @param CommentDomain    $commentDomain
-     * @param PlaylistDomain   $playlistDomain
+     * @param Request $request
+     * @param MusicDomain $musicDomain
+     * @param CommentDomain $commentDomain
+     * @param PlaylistDomain $playlistDomain
+     * @param GoogleStorageAdapter $googleStorageAdapter
      */
     public function __construct(
         Request $request,
         MusicDomain $musicDomain,
-        MusicTransformer $musicTransformer,
         CommentDomain $commentDomain,
-        PlaylistDomain $playlistDomain
+        PlaylistDomain $playlistDomain,
+        GoogleStorageAdapter $googleStorageAdapter
     ) {
         parent::__construct($request);
         $this->musicDomain = $musicDomain;
-        $this->musicTransformer = $musicTransformer;
         $this->commentDomain = $commentDomain;
         $this->playlistDomain = $playlistDomain;
+        $this->googleStorageAdapter = $googleStorageAdapter;
     }
 
     /**
@@ -74,6 +74,7 @@ class MusicController extends Controller
      */
     public function addNewSong(): JsonResponse
     {
+        $config = new Config();
         $this->validate($this->request, MusicModel::$rules);
 
         $title = $this->request->get('title');
@@ -83,12 +84,12 @@ class MusicController extends Controller
         $genreId = $this->request->get('genreId');
         $originalName = $musicFile->getClientOriginalName();
         $extension = $musicFile->getClientOriginalExtension();
+        $uniqueName = uniqid('fl_', false);
 
-        // Store to google cloud
-        $disk = Storage::disk('gcs');
-        $response = $disk->put('audio', $musicFile);
-        $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response;
-        $uniqueName = explode('/', $response)[1];
+        $config->set('name', $uniqueName);
+        $response = $this->googleStorageAdapter->write($musicFile->getPath(),
+            file_get_contents($musicFile), $config );
+        $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response['path'];
 
         $response = $this->musicDomain->newMusic(
             $title,
@@ -104,7 +105,7 @@ class MusicController extends Controller
         if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
-                'data'    => $this->musicTransformer->transformSong($response),
+                'data'    => $response,
             ]);
         }
 
@@ -127,53 +128,50 @@ class MusicController extends Controller
     {
         $payload = [];
         if (!empty($this->request->input('title'))) {
-            $payload = [
-                    'title' => $this->request->input('title'),
-                ];
+            $payload ['title'] = $this->request->input('title');
         }
 
         if (!empty($this->request->input('artistes'))) {
-            $payload = [
-                'artistes' => $this->request->input('artistes'),
-            ];
+            $payload ['artistes'] = $this->request->input('artistes');
         }
 
         if (!empty($this->request->input('albumId'))) {
-            $payload = [
-                'albumId' => $this->request->input('albumId'),
-            ];
+            $payload ['album_id'] = $this->request->input('albumId');
         }
-        if (!empty($this->request->file('song'))) {
-            $disk = Storage::disk('gcs');
-            $olderLocation = MusicModel::find($id)->get('location');
-            $disk->delete($olderLocation);
-            $musicFile = $this->request->file('song');
-            $response = $disk->put('audio', $musicFile);
-            $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response;
 
+        if (!empty($this->request->input('genreId'))) {
+            $payload ['genreId'] = $this->request->input('genreId');
+        }
+
+        if (!empty($this->request->file('song'))) {
+            $previousName = MusicModel::find($id);
+            if (empty($previousName)) {
+                throw new NotFoundException('Song not found.');
+            }
+            $previousName = $previousName->get('uniqueName');
+            $config = new Config();
+            $config->set('name', $previousName);
+            $musicFile = $this->request->file('song');
+            $response = $this->googleStorageAdapter->write($musicFile->getPath(),
+                file_get_contents($musicFile), $config );
+            $location = getenv('GOOGLE_CLOUD_STORAGE_API_URI').'/'.$response['path'];
             $originalName = $musicFile->getClientOriginalName();
             $uniqueName = uniqid('audio_', true);
             $extension = $musicFile->getClientOriginalExtension();
-            $uniqueNameExtension = $uniqueName.'.'.$extension;
-            $location = $location.'/'.$uniqueNameExtension;
 
             $payload['location'] = $location;
             $payload['extension'] = $extension;
             $payload['originalName'] = $originalName;
             $payload['uniqueName'] = $uniqueName;
         }
+
         $response = $this->musicDomain->updateSong($id, $payload);
         if (!empty($response)) {
             return response()->json([
                 'message' => 'success',
-                'data'    => $this->musicTransformer->transformSong($response),
+                'data'    => $response,
             ], 202);
         }
-
-        return response()->json([
-            'message' => 'Error',
-            'data'    => 'An error occurred while trying to update a song.',
-        ], 500);
     }
 
     /**
@@ -187,17 +185,18 @@ class MusicController extends Controller
      */
     public function deleteSong(int $id): JsonResponse
     {
+        $path = MusicModel::where('id', $id)->first();
+        if (empty($path)) {
+            throw new NotFoundException('Song not found');
+        }
+        $path = $path->toArray()['uniqueName'];
         if ($this->musicDomain->removeSong($id)) {
+            $this->googleStorageAdapter->delete($path);
             return response()->json([
                 'message' => 'Success',
                 'data'    => 'song deleted successfully.',
             ]);
         }
-
-        return response()->json([
-            'message' => 'Error',
-            'data'    => 'An error occurred while trying to delete a song.',
-        ], 500);
     }
 
     /**
@@ -228,21 +227,25 @@ class MusicController extends Controller
      */
     public function fetchRecommendedSongs(): JsonResponse
     {
-        $recommendedSongs = Auth::user()->recommend()->get()->toArray()[0];
-        $response = [
-            'id'            => $recommendedSongs['id'],
-            'title'         => $recommendedSongs['id'],
-            'originalName'  => $recommendedSongs['id'],
-            'extension'     => $recommendedSongs['id'],
-            'location'      => $recommendedSongs['id'],
-            'uniqueName'    => $recommendedSongs['id'],
-            'artistes'      => $recommendedSongs['id'],
-            'album_id'      => $recommendedSongs['id'],
-            'genreId'       => $recommendedSongs['id'],
-            'created_at'    => $recommendedSongs['id'],
-            'updated_at'    => $recommendedSongs['id'],
-            'recommendedBy' => User::find($recommendedSongs['pivot']['recommended_by'])->toArray(),
+        $recommendedSongs = Auth::user()->recommend()->get()->toArray();
+        $response = [];
+        foreach ($recommendedSongs as $recommendedSong) {
+            $response[] = [
+                'id'            => $recommendedSong['id'],
+                'title'         => $recommendedSong['title'],
+                'originalName'  => $recommendedSong['originalName'],
+                'extension'     => $recommendedSong['extension'],
+                'location'      => $recommendedSong['location'],
+                'uniqueName'    => $recommendedSong['uniqueName'],
+                'artistes'      => $recommendedSong['artistes'],
+                'album_id'      => $recommendedSong['album_id'],
+                'genreId'       => $recommendedSong['genreId'],
+                'created_at'    => $recommendedSong['created_at'],
+                'updated_at'    => $recommendedSong['updated_at'],
+                'recommendedBy' => User::find($recommendedSong['pivot']['recommended_by'])->toArray(),
             ];
+        }
+
 
         return response()->json([
             'message' => 'success',
@@ -275,10 +278,6 @@ class MusicController extends Controller
                 'data'    => $response,
             ]);
         }
-
-        return response()->json([
-            'message' => 'error',
-        ], 500);
     }
 
     /**
@@ -362,16 +361,13 @@ class MusicController extends Controller
      *
      * @param $id
      *
-     * @throws FileNotFoundException
-     *
      * @return BinaryFileResponse
      */
     public function downloadSong($id): BinaryFileResponse
     {
         $filters = ['id' => $id];
         $response = $this->musicDomain->getSongs($filters)[0];
-        $disk = Storage::disk('gcs');
-        $file = $disk->get('audio/'.$response['uniqueName']);
+        $file = $this->googleStorageAdapter->read('');
         file_put_contents('tempFile', $file);
 
         $headers = [

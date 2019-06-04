@@ -13,11 +13,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton('filesystem', static function ($app) {
-            return $app->loadComponent('filesystems', FilesystemServiceProvider::class, 'filesystem');
-        });
     }
 
     public function boot()

@@ -16,8 +16,11 @@ class Entrust
      *
      * @return array
      */
-    public function newRole(string $name, ?string $displayName = null, ?string $description = null): array
-    {
+    public function newRole(
+        string $name,
+        ?string $displayName = null,
+        ?string $description = null
+    ): array {
         $newRole = new Role();
         $newRole->name = $name;
         $newRole->display_name = $displayName;
@@ -36,8 +39,11 @@ class Entrust
      *
      * @return array
      */
-    public function newPermission(string $name, ?string $displayName = null, ?string $description = null)
-    {
+    public function newPermission(
+        string $name,
+        ?string $displayName = null,
+        ?string $description = null
+    ): array {
         $newPermission = new Permission();
         $newPermission->name = $name;
         $newPermission->display_name = $displayName;

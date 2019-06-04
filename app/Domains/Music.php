@@ -70,18 +70,8 @@ class Music
     public function updateSong(int $id, array $updateDetails): array
     {
         $music = MusicModel::find($id);
-        if (empty($music)) {
-            throw new NotFoundException('Song not found.');
-        }
         foreach ($updateDetails as $key => $value) {
-            if ($key === 'location') {
-                unlink(public_path($music->toArray()['location']));
-            }
-            if ($key === 'artistes') {
-                $music->artistes = serialize($value);
-            } else {
-                $music->$key = $value;
-            }
+            $music->$key = $value;
         }
         if ($music->update()) {
             return $music->toArray();
@@ -102,12 +92,6 @@ class Music
     public function removeSong(int $id): bool
     {
         $music = MusicModel::find($id);
-        if (empty($music)) {
-            throw new NotFoundException('Song not found.');
-        }
-
-        unlink($music->toArray()['location']);
-
         if ($music->delete()) {
             return true;
         }

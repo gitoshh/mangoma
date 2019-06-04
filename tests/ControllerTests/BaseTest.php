@@ -14,7 +14,13 @@ class BaseTest extends TestCase
         parent::setUp();
         Artisan::call('migrate:refresh');
         Artisan::call('db:seed');
-        $this->headers = [];
+        $payload = [
+            'email'    => 'test.user@gmail.com',
+            'password' => 'A123123@',
+        ];
+        $this->post('/auth/login', $payload);
+        $response = json_decode($this->response->getContent(), true);
+        $this->headers = ['token' => $response['token']];
     }
 
     /**
